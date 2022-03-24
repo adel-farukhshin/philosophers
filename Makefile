@@ -5,7 +5,7 @@ SRC =	philosophers.c
 
 OBJ = $(addprefix $(OBJDIR),$(SRC:.c=.o))
 
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -pthread
 
 D_FILES = ${patsubst %.c,%.d,${SRC}}
 
