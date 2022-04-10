@@ -44,13 +44,45 @@ int	init_philos(t_philos *philos, struct timeval tv)
 	return (1);
 }
 
+void	forks_delete(pthread_mutex_t *forks, int nb)
+{
+	while (nb > -1)
+	{
+		pthread_mutex_destroy(forks + nb);
+		nb--;
+	}
+}
 
+pthread_mutex_t *forks_init(t_philos *philos)
+{
+	pthread_mutex_t *forks;
+	int				i;
+
+	i = 0;
+	forks = malloc(sizeof(pthread_mutex_t) * philos->ph_num);
+	if (!forks)
+	{
+		free(philos->ph_arr);
+		return (NULL);	
+	}
+	while (i < philos->ph_num)
+	{
+		if (pthread_mutex_init(forks + i, NULL))
+		{
+			forks_delete(forks, i - 1);
+			free(philos->ph_arr);
+			return (NULL);
+		}
+		i++;
+	}
+	return (forks);
+}
 
 int	main()
 {
 	t_philos philos;
 	struct timeval tv;
-	// int	i = 0;
+	int	i = 0;
 
 	if (gettimeofday(&tv, NULL))
 		return (1);
@@ -68,33 +100,20 @@ int	main()
 	// 	i++;
 	// }
 
-/*
+
 	pthread_mutex_t *forks;
 
-	forks = malloc(sizeof(pthread_mutex_t) * philos.ph_num);
+	forks = forks_init(&philos);
 	if (!forks)
-	{
-		free(philos.ph_arr);
 		return (3);
-	}
-	i = 0;
-	while (i < philos.ph_num)
-	{
-		if (pthread_mutex_init(forks + i, NULL))
-		{
-			while (i)
-			{
-				i--;
-				pthread_mutex_destroy(forks + i);
-			}
-		}
-		i++;
-	}
+	/*
 
 	pthread_t *t;
 	t = malloc(sizeof(pthread_t) * philos.ph_num); // может это перенести в philos
 	if (!t)
 	{
+		forks_delete(forks, philos.ph_num - 1);
+		free(forks);
 		free(philos.ph_arr);
 		return (4);
 	}
@@ -103,7 +122,7 @@ int	main()
 	{
 		if(pthread_create((t + i), NULL, (void *)&philosopher, (philos.ph_arr + i)))
 		{
-			while (i)
+			while (i > -1)
 			{
 				i--;
 				pthread_join(t[i], NULL);
@@ -129,7 +148,8 @@ int	main()
 
 	// printf("time at exit: sec %ld, ms %u\n", tv.tv_sec, tv.tv_usec);
 	free(t);
-
-	*/
+*/
+	forks_delete(forks, philos.ph_num - 1);
+	free(forks);
 	free(philos.ph_arr);
 }
