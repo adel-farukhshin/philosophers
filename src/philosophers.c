@@ -18,36 +18,56 @@
 
 #include "philosophers.h"
 
-#define TIME_TO_DIE 10
-#define TIME_TO_SLEEP 1
-#define	TIME_TO_EAT 1
-// #define TIME_TO_THINK 1
-#define NB_OF_PHILO 5
-#define T_TO_EAT -1
-
-void	ph_sleep(int *nb)
+void	ph_sleep(int nb, int to_sleep)
 {
 	struct timeval tv;
 
 	gettimeofday(&tv, NULL);
 
-	printf("%u %d is sleeping\n", tv.tv_usec, *nb);
-	sleep(TIME_TO_SLEEP);
+	printf("%u %d is sleeping\n", tv.tv_usec, nb);
+	sleep(to_sleep);
 }
 
-void	ph_think(int *nb)
+void	ph_think(int nb)
 {
 	struct timeval tv;
 
 	gettimeofday(&tv, NULL);
-	printf("%u %d is thinking\n", tv.tv_usec, *nb);
+	printf("%u %d is thinking\n", tv.tv_usec, nb);
 	// usleep(TIME_TO_THINK);
 }
 
-void	philosopher(int *nb)
+
+int right(int n, int ph_num)
 {
-	ph_sleep(nb);
-	ph_think(nb);
+	int	res;
+
+	res = (n - 1) % ph_num;
+	if (res == 0)
+		res = ph_num;
+	return (res);
+}
+
+int	left(int n, int ph_num)
+{
+	int	res;
+
+	res = (n + 1) % ph_num;
+	if (res == 0)
+		res = ph_num;
+	return (res);
+}
+
+
+void	philosopher(t_philo *philo)
+{
+	printf("Philo %d, time: %ld,%u, to_die: %d, to_eat: %d, to_sleep: %d; right %d, left %d\n", philo->index,
+		philo->start.tv_sec, philo->start.tv_usec, philo->to_die, philo->to_eat, philo->to_sleep, 
+		right(philo->index, NB_OF_PHILO), left(philo->index, NB_OF_PHILO));
+
+
+	// ph_sleep(philo->index, philo->to_sleep);
+	// ph_think(philo->index);
 }
 
 int	init_philos(t_philos *philos, struct timeval tv)
@@ -77,6 +97,7 @@ int	init_philos(t_philos *philos, struct timeval tv)
 }
 
 
+
 int	main()
 {
 	t_philos philos;
@@ -100,20 +121,52 @@ int	main()
 	// }
 
 /*
-	// pthread_t *t;
-	t = malloc(sizeof(pthread_t) * NB_OF_PHILO); // может это перенести в philos
-	if (!t)
-		return (1);
+	pthread_mutex_t *forks;
 
-	while (i < NB_OF_PHILO)
+	forks = malloc(sizeof(pthread_mutex_t) * philos.ph_num);
+	if (!forks)
 	{
-		pthread_create((t + i), NULL, (void *)&philosopher, (t + i));
-		printf("Philo %d is created\n", i);
+		free(philos.ph_arr);
+		return (3);
+	}
+	i = 0;
+	while (i < philos.ph_num)
+	{
+		if (pthread_mutex_init(forks + i, NULL))
+		{
+			while (i)
+			{
+				i--;
+				pthread_mutex_destroy(forks + i);
+			}
+		}
+		i++;
+	}
+
+	pthread_t *t;
+	t = malloc(sizeof(pthread_t) * philos.ph_num); // может это перенести в philos
+	if (!t)
+	{
+		free(philos.ph_arr);
+		return (4);
+	}
+	i = 0;
+	while (i < philos.ph_num)
+	{
+		if(pthread_create((t + i), NULL, (void *)&philosopher, (philos.ph_arr + i)))
+		{
+			while (i)
+			{
+				i--;
+				pthread_join(t[i], NULL);
+			}
+		}
+		printf("Philo %d is created\n", philos.ph_arr[i].index);
 		// pthread_detach(t[i]);
 		i++;
 	}
 	i = 0;
-	while (i < NB_OF_PHILO)
+	while (i < philos.ph_num)
 	{
 		if (pthread_join(t[i], NULL))
 			perror("Failed to join error");
@@ -125,7 +178,10 @@ int	main()
 	
 	// pthread_exit(0);
 
-*/
+
 	// printf("time at exit: sec %ld, ms %u\n", tv.tv_sec, tv.tv_usec);
+	free(t);
+
+	*/
 	free(philos.ph_arr);
 }
