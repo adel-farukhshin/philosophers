@@ -98,6 +98,20 @@ void	forks_to_philos(t_philos *philos, pthread_mutex_t *forks)
 	}
 }
 
+// unsigned long delta(struct timeval start, struct timeval end)
+// {
+// 	unsigned long	secs;
+// 	unsigned int	usecs;
+
+// 	secs = (end.tv_sec - start.tv_sec) * 1000;
+// 	// printf("secs: %ld, end %ld, start %ld\n", secs, end.tv_sec, start.tv_sec);
+// 	usecs = end.tv_usec - start.tv_usec;
+// 	// printf("usecs: %u, end %u, start %u\n", usecs, end.tv_usec, start.tv_usec);
+// 	secs += (unsigned long) usecs;
+// 	// printf("secs: %ld\n", secs);
+// 	return (secs);
+// }
+
 int	is_died(t_philos *philos)
 {
 	int	i;
@@ -109,6 +123,7 @@ int	is_died(t_philos *philos)
 	// printf("now: sec %ld, ms %u\n", tv.tv_sec, tv.tv_usec);
 	while (i < philos->ph_num)
 	{
+		// delta(philos->ph_arr[i].last, tv);
 		// printf("now: sec %ld, ms %u; delta: %ld %u\n", tv.tv_sec, tv.tv_usec, 
 		// 	tv.tv_sec - philos->ph_arr[i].last.tv_sec, tv.tv_usec - philos->ph_arr[i].last.tv_usec);
 		if ((tv.tv_usec - philos->ph_arr[i].last.tv_usec) > 
