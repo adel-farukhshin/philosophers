@@ -130,7 +130,7 @@ int	is_died(t_philos *philos)
 			philos->ph_arr->to_die) // tv.tv_sec - philos->ph_arr[i].last.tv_sec * 1000 + 
 		{
 			philos->is_to_die = 1;
-			printf("%u %d is died\n", tv.tv_usec, philos->ph_arr[i].index);
+			printf("%lu %d is died\n", tv.tv_usec, philos->ph_arr[i].index);
 			return (1);
 		}
 		i++;
