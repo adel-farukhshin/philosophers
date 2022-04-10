@@ -32,7 +32,7 @@ typedef struct s_philos {
 	int		times_to_eat;
 }	t_philos;
 
-#define TIME_TO_DIE 10
+#define TIME_TO_DIE 4
 #define TIME_TO_SLEEP 1
 #define	TIME_TO_EAT 1
 #define NB_OF_PHILO 5

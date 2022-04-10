@@ -65,7 +65,7 @@ void	ph_eat(t_philo *philo)
 
 	gettimeofday(&tv, NULL);
 	philo->last.tv_sec = tv.tv_sec;
-	philo->last.tv_usec = tv.tv_usec;
+	philo->last.tv_usec = tv.tv_usec / 1000;
 	usleep(philo->to_eat * 1000);
 	printf("%u %d is eating\n", tv.tv_usec, philo->index);
 }
@@ -80,7 +80,7 @@ void	philosopher(t_philo *philo)
 	int	i;
 
 	i = 0;
-	while (i < 3)
+	while (i < 1)
 	{ 
 		pthread_mutex_lock(MAX(philo->fork_r, philo->fork_l));
 		pthread_mutex_lock(MIN(philo->fork_r, philo->fork_l));

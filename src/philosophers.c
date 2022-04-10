@@ -96,18 +96,29 @@ void	forks_to_philos(t_philos *philos, pthread_mutex_t *forks)
 	}
 }
 
-// int	is_to_die(t_philos *philos)
-// {
-// 	int	i;
+int	is_died(t_philos *philos)
+{
+	int	i;
+	struct timeval tv;
 
-// 	i = 0;
-// 	while (i < philos->ph_num)
-// 	{
-// 		if 
-// 		i++;
-// 	}
-// 	return (0);
-// }
+	gettimeofday(&tv, NULL);
+	tv.tv_usec /= 1000;
+	i = 0;
+	// printf("now: sec %ld, ms %u\n", tv.tv_sec, tv.tv_usec);
+	while (i < philos->ph_num)
+	{
+		// printf("now: sec %ld, ms %u; delta: %ld %u\n", tv.tv_sec, tv.tv_usec, 
+		// 	tv.tv_sec - philos->ph_arr[i].last.tv_sec, tv.tv_usec - philos->ph_arr[i].last.tv_usec);
+		if ((tv.tv_usec - philos->ph_arr[i].last.tv_usec) > 
+			philos->ph_arr->to_die) // tv.tv_sec - philos->ph_arr[i].last.tv_sec * 1000 + 
+		{
+			printf("%u %d is died\n", tv.tv_usec, philos->ph_arr[i].index);
+			return (1);
+		}
+		i++;
+	}
+	return (0);
+}
 
 int	main()
 {
@@ -164,6 +175,10 @@ int	main()
 		// pthread_detach(t[i]);
 		i++;
 	}
+	while (!is_died(&philos));
+	
+	// is_died(&philos);
+
 	i = 0;
 	while (i < philos.ph_num)
 	{
