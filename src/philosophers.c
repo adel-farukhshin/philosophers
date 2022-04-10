@@ -11,9 +11,9 @@
 /* ************************************************************************** */
 
 #include <stdio.h>
-#include <sys/time.h>
+// #include <sys/time.h>
 #include <unistd.h>
-#include <pthread.h>
+// #include <pthread.h>
 #include <stdlib.h>
 
 #include "philosophers.h"
@@ -78,6 +78,24 @@ pthread_mutex_t *forks_init(t_philos *philos)
 	return (forks);
 }
 
+void	forks_to_philos(t_philos *philos, pthread_mutex_t *forks)
+{
+	int	i;
+
+	i = 1;
+	while (i <= philos->ph_num)
+	{
+		philos->ph_arr[i - 1].fork_l = forks + i - 1;
+		if (i == 1)
+			philos->ph_arr[i - 1].fork_r = forks + philos->ph_num - 1;
+		else
+			philos->ph_arr[i - 1].fork_r = forks + i - 2;
+		// printf("philo %d r %p, l %p\n", philos->ph_arr[i - 1].index, philos->ph_arr[i - 1].fork_r, 
+		// 		philos->ph_arr[i - 1].fork_l);
+		i++;
+	}
+}
+
 int	main()
 {
 	t_philos philos;
@@ -106,7 +124,8 @@ int	main()
 	forks = forks_init(&philos);
 	if (!forks)
 		return (3);
-	/*
+	forks_to_philos(&philos, forks);
+	
 
 	pthread_t *t;
 	t = malloc(sizeof(pthread_t) * philos.ph_num); // может это перенести в philos
@@ -148,7 +167,7 @@ int	main()
 
 	// printf("time at exit: sec %ld, ms %u\n", tv.tv_sec, tv.tv_usec);
 	free(t);
-*/
+
 	forks_delete(forks, philos.ph_num - 1);
 	free(forks);
 	free(philos.ph_arr);

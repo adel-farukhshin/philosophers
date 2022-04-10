@@ -14,13 +14,16 @@
 # define PHILOSOPHERS_H
 
 #include <sys/time.h>
+#include <pthread.h>
 
 typedef struct s_philo {
 	struct timeval start;
-	int		to_die;
-	int		to_eat;
-	int		to_sleep;
-	int		index;
+	int						to_die;
+	int						to_eat;
+	int						to_sleep;
+	int						index;
+	pthread_mutex_t *		fork_r;
+	pthread_mutex_t *		fork_l;
 }	t_philo;
 
 typedef struct s_philos {

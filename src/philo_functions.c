@@ -57,9 +57,9 @@ int	left(int n, int ph_num)
 
 void	philosopher(t_philo *philo)
 {
-	printf("Philo %d, time: %ld,%u, to_die: %d, to_eat: %d, to_sleep: %d; right %d, left %d\n", philo->index,
-		philo->start.tv_sec, philo->start.tv_usec, philo->to_die, philo->to_eat, philo->to_sleep, 
-		right(philo->index, NB_OF_PHILO), left(philo->index, NB_OF_PHILO));
+	printf("Philo %d, time: %ld,%u, to_die: %d, to_eat: %d, to_sleep: %d; right %d, left %d; forks: right - %p, left - %p\n", 
+		philo->index, philo->start.tv_sec, philo->start.tv_usec, philo->to_die, philo->to_eat, philo->to_sleep, 
+		right(philo->index, NB_OF_PHILO), left(philo->index, NB_OF_PHILO), philo->fork_r, philo->fork_l);
 
 
 	// ph_sleep(philo->index, philo->to_sleep);
