@@ -26,7 +26,7 @@ ${OBJDIR}%.o : ${SRCDIR}%.c
 all : ${NAME}
 
 ${NAME} : obj ${OBJ} 
-	${CC} ${LDFLAGS} ${OBJ} -o $@ 
+	${CC} ${LDFLAGS} -fsanitize=thread ${OBJ} -o $@ 
 
 obj:
 	mkdir -p $(OBJDIR)
