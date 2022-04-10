@@ -24,7 +24,7 @@ void	ph_sleep(int nb, int to_sleep)
 	struct timeval tv;
 
 	gettimeofday(&tv, NULL);
-
+	tv.tv_usec = tv.tv_usec / 1000;
 	printf("%u %d is sleeping\n", tv.tv_usec, nb);
 	usleep(to_sleep * 1000);
 }
@@ -34,6 +34,7 @@ void	ph_think(int nb)
 	struct timeval tv;
 
 	gettimeofday(&tv, NULL);
+	tv.tv_usec = tv.tv_usec / 1000;
 	printf("%u %d is thinking\n", tv.tv_usec, nb);
 	// usleep(TIME_TO_THINK);
 }
@@ -64,8 +65,10 @@ void	ph_eat(t_philo *philo)
 	struct timeval tv;
 
 	gettimeofday(&tv, NULL);
+	tv.tv_usec = tv.tv_usec / 1000;
+
 	philo->last.tv_sec = tv.tv_sec;
-	philo->last.tv_usec = tv.tv_usec / 1000;
+	philo->last.tv_usec = tv.tv_usec;
 	usleep(philo->to_eat * 1000);
 	printf("%u %d is eating\n", tv.tv_usec, philo->index);
 }
