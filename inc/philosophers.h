@@ -24,12 +24,14 @@ typedef struct s_philo {
 	int						index;
 	pthread_mutex_t *		fork_r;
 	pthread_mutex_t *		fork_l;
+	int						*is_to_die;
 }	t_philo;
 
 typedef struct s_philos {
 	t_philo	*ph_arr;
 	int		ph_num;
 	int		times_to_eat;
+	int		is_to_die;
 }	t_philos;
 
 #define TIME_TO_DIE 4

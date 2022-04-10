@@ -77,11 +77,20 @@ void	philosopher(t_philo *philo)
 		// philo->index, philo->start.tv_sec, philo->start.tv_usec, philo->to_die, philo->to_eat, philo->to_sleep, 
 		// right(philo->index, NB_OF_PHILO), left(philo->index, NB_OF_PHILO), philo->fork_r, philo->fork_l);
 
-	int	i;
+	// int	i;
 
-	i = 0;
-	while (i < 1)
+	struct timeval tv;
+
+	gettimeofday(&tv, NULL);
+
+	// i = 0;
+	while (1)
 	{ 
+		if (*(philo->is_to_die))
+		{
+			// printf("%d %u %d return\n", *(philo->is_to_die), tv.tv_usec, philo->index);
+			return ;
+		}
 		pthread_mutex_lock(MAX(philo->fork_r, philo->fork_l));
 		pthread_mutex_lock(MIN(philo->fork_r, philo->fork_l));
 		ph_eat(philo);
@@ -89,8 +98,12 @@ void	philosopher(t_philo *philo)
 		pthread_mutex_unlock(MIN(philo->fork_r, philo->fork_l));
 		
 		// usleep(philo->to_sleep * 1000);
+		if (*(philo->is_to_die))
+			return ;
 		ph_sleep(philo->index, philo->to_sleep);
+		if (*(philo->is_to_die))
+			return ;
 		ph_think(philo->index);
-		i++;
+		// i++;
 	}
 }

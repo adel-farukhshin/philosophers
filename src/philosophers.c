@@ -25,6 +25,7 @@ int	init_philos(t_philos *philos, struct timeval tv)
 	i = 1;
 	philos->ph_num = NB_OF_PHILO;
 	philos->times_to_eat = T_TO_EAT;
+	philos->is_to_die = 0;
 	philos->ph_arr = malloc(sizeof(t_philo) * philos->ph_num);
 	if (!philos->ph_arr)
 	{
@@ -39,6 +40,7 @@ int	init_philos(t_philos *philos, struct timeval tv)
 		philos->ph_arr[i - 1].to_eat = TIME_TO_EAT;
 		philos->ph_arr[i - 1].to_sleep = TIME_TO_SLEEP;
 		philos->ph_arr[i - 1].index = i;
+		philos->ph_arr[i - 1].is_to_die = &philos->is_to_die;
 		i++;
 	}
 	return (1);
@@ -112,6 +114,7 @@ int	is_died(t_philos *philos)
 		if ((tv.tv_usec - philos->ph_arr[i].last.tv_usec) > 
 			philos->ph_arr->to_die) // tv.tv_sec - philos->ph_arr[i].last.tv_sec * 1000 + 
 		{
+			philos->is_to_die = 1;
 			printf("%u %d is died\n", tv.tv_usec, philos->ph_arr[i].index);
 			return (1);
 		}
