@@ -17,7 +17,7 @@
 #include <pthread.h>
 
 typedef struct s_philo {
-	struct timeval start;
+	struct timeval 			last;
 	int						to_die;
 	int						to_eat;
 	int						to_sleep;

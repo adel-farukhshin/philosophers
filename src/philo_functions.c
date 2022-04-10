@@ -64,8 +64,8 @@ void	ph_eat(t_philo *philo)
 	struct timeval tv;
 
 	gettimeofday(&tv, NULL);
-	philo->start.tv_sec = tv.tv_sec;
-	philo->start.tv_usec = tv.tv_usec;
+	philo->last.tv_sec = tv.tv_sec;
+	philo->last.tv_usec = tv.tv_usec;
 	usleep(philo->to_eat * 1000);
 	printf("%u %d is eating\n", tv.tv_usec, philo->index);
 }

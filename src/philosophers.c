@@ -33,8 +33,8 @@ int	init_philos(t_philos *philos, struct timeval tv)
 	}
 	while (i <= philos->ph_num)
 	{
-		philos->ph_arr[i - 1].start.tv_sec = tv.tv_sec;
-		philos->ph_arr[i - 1].start.tv_usec = tv.tv_usec;
+		philos->ph_arr[i - 1].last.tv_sec = tv.tv_sec;
+		philos->ph_arr[i - 1].last.tv_usec = tv.tv_usec;
 		philos->ph_arr[i - 1].to_die = TIME_TO_DIE;
 		philos->ph_arr[i - 1].to_eat = TIME_TO_EAT;
 		philos->ph_arr[i - 1].to_sleep = TIME_TO_SLEEP;
@@ -95,6 +95,19 @@ void	forks_to_philos(t_philos *philos, pthread_mutex_t *forks)
 		i++;
 	}
 }
+
+// int	is_to_die(t_philos *philos)
+// {
+// 	int	i;
+
+// 	i = 0;
+// 	while (i < philos->ph_num)
+// 	{
+// 		if 
+// 		i++;
+// 	}
+// 	return (0);
+// }
 
 int	main()
 {
