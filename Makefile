@@ -1,7 +1,7 @@
 
 NAME = philosophers
 
-SRC =	philosophers.c 
+SRC =	philosophers.c philo_functions.c
 
 OBJ = $(addprefix $(OBJDIR),$(SRC:.c=.o))
 
