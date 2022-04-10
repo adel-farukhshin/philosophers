@@ -10,4 +10,23 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#ifndef PHILOSOPHERS_H
+# define PHILOSOPHERS_H
 
+#include <sys/time.h>
+
+typedef struct s_philo {
+	struct timeval start;
+	int		to_die;
+	int		to_eat;
+	int		to_sleep;
+	int		index;
+}	t_philo;
+
+typedef struct s_philos {
+	t_philo	*ph_arr;
+	int		ph_num;
+	int		times_to_eat;
+}	t_philos;
+
+#endif
