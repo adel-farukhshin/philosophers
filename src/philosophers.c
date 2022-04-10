@@ -147,7 +147,7 @@ int	main()
 				pthread_join(t[i], NULL);
 			}
 		}
-		printf("Philo %d is created\n", philos.ph_arr[i].index);
+		// printf("Philo %d is created\n", philos.ph_arr[i].index);
 		// pthread_detach(t[i]);
 		i++;
 	}
@@ -157,7 +157,7 @@ int	main()
 		if (pthread_join(t[i], NULL))
 			perror("Failed to join error");
 		else
-			printf("Philo %d is deleted\n", i);
+			// printf("Philo %d is deleted\n", i);
 			
 		i++;
 	} // разница между detached и join в том, что в первом случае ресурсы освобождаются сразу по выходу из треда, в то время как, во втором случае необходим вызов join
