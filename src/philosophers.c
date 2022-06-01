@@ -144,6 +144,7 @@ int	main()
 	struct timeval tv;
 	int	i = 0;
 
+	// Initialize
 	if (gettimeofday(&tv, NULL))
 		return (1);
 	tv.tv_usec /= 1000;
@@ -151,6 +152,7 @@ int	main()
 		return (2);
 	// printf("sec %ld, ms: %u\n", tv.tv_sec, tv.tv_usec);
 
+	// Test initializing
 	// i = 1;
 	// while (i <= philos.ph_num)
 	// {
@@ -161,6 +163,7 @@ int	main()
 	// }
 
 
+	// Mutex Initialization
 	pthread_mutex_t *forks;
 
 	forks = forks_init(&philos);
@@ -168,7 +171,7 @@ int	main()
 		return (3);
 	forks_to_philos(&philos, forks);
 	
-
+	// Threads Initialization
 	pthread_t *t;
 	t = malloc(sizeof(pthread_t) * philos.ph_num); // может это перенести в philos
 	if (!t)
@@ -193,10 +196,11 @@ int	main()
 		// pthread_detach(t[i]);
 		i++;
 	}
-	while (!is_died(&philos));
+	while (!is_died(&philos)); // should this function be in infinite cycle?
 	
 	// is_died(&philos);
 
+	// End program
 	i = 0;
 	while (i < philos.ph_num)
 	{

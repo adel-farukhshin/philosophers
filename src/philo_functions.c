@@ -95,22 +95,35 @@ void	*philosopher(void *data)
 			// printf("%d %u %d return\n", *(philo->is_to_die), tv.tv_usec, philo->index);
 			return 0;
 		}
+		// Take the first fork 
+		pthread_mutex_lock(MIN(philo->fork_r, philo->fork_l));
 		gettimeofday(&tv, NULL);
 		tv.tv_usec /= 1000;
+		printf("%lu %d has taken a fork\n", tv.tv_usec, philo->index);
+		
+		// Take the second fork 
 		pthread_mutex_lock(MAX(philo->fork_r, philo->fork_l));
+		gettimeofday(&tv, NULL);
+		tv.tv_usec /= 1000;
 		printf("%lu %d has taken a fork\n", tv.tv_usec, philo->index);
-		pthread_mutex_lock(MIN(philo->fork_r, philo->fork_l));
-		printf("%lu %d has taken a fork\n", tv.tv_usec, philo->index);
+
+		// Eating
 		ph_eat(philo);
+
+
 		pthread_mutex_unlock(MAX(philo->fork_r, philo->fork_l));
 		pthread_mutex_unlock(MIN(philo->fork_r, philo->fork_l));
 		
 		// usleep(philo->to_sleep * 1000);
 		if (*(philo->is_to_die))
 			return 0;
+		
+		// Sleep
 		ph_sleep(philo->index, philo->to_sleep);
 		if (*(philo->is_to_die))
 			return 0;
+		
+		// Think
 		ph_think(philo->index);
 		// i++;
 	}
