@@ -104,10 +104,7 @@ void	*philosopher(void *data)
 	while (1)
 	{ 
 		if (*(philo->is_to_die))
-		{
-			// printf("%d %u %d return\n", *(philo->is_to_die), tv.tv_usec, philo->index);
 			return 0;
-		}
 		// Take the first fork 
 		pthread_mutex_lock(MIN(philo->fork_r, philo->fork_l));
 		gettimeofday(&tv, NULL);
@@ -118,6 +115,11 @@ void	*philosopher(void *data)
 			philo->start.tv_sec - philo->start.tv_usec, philo->index);
 		pthread_mutex_unlock(philo->out);
 
+		if (*(philo->is_to_die))
+		{
+			pthread_mutex_unlock(MIN(philo->fork_r, philo->fork_l));
+			return 0;
+		}
 		// Take the second fork 
 		pthread_mutex_lock(MAX(philo->fork_r, philo->fork_l));
 		gettimeofday(&tv, NULL);
@@ -128,6 +130,8 @@ void	*philosopher(void *data)
 			philo->start.tv_sec - philo->start.tv_usec, philo->index);
 		pthread_mutex_unlock(philo->out);
 
+		// if (*(philo->is_to_die))
+		// 	return 0;
 		// Eating
 		ph_eat(philo);
 
@@ -136,14 +140,16 @@ void	*philosopher(void *data)
 		pthread_mutex_unlock(MIN(philo->fork_r, philo->fork_l));
 		
 		// usleep(philo->to_sleep * 1000);
+		
 		if (*(philo->is_to_die))
 			return 0;
-		
 		// Sleep
 		ph_sleep(philo);
 		if (*(philo->is_to_die))
 			return 0;
 		
+		if (*(philo->is_to_die))
+			return 0;
 		// Think
 		ph_think(philo);
 		// i++;
