@@ -119,13 +119,14 @@ int	is_died(t_philos *philos)
 	int	i;
 	struct timeval now;
 
-	gettimeofday(&now, NULL);
-	now.tv_sec *= 1000;
-	now.tv_usec /= 1000;
+	
 	i = 0;
 	// printf("now: sec %ld, ms %u\n", tv.tv_sec, tv.tv_usec);
-	while (i < philos->ph_num)
+	while (i < philos->ph_num && !(philos->is_to_die))
 	{
+		gettimeofday(&now, NULL);
+		now.tv_sec *= 1000;
+		now.tv_usec /= 1000;
 		// delta(philos->ph_arr[i].last, tv);
 		// printf("now: sec %ld, ms %u; delta: %ld %u\n", tv.tv_sec, tv.tv_usec, 
 		// 	tv.tv_sec - philos->ph_arr[i].last.tv_sec, tv.tv_usec - philos->ph_arr[i].last.tv_usec);
@@ -252,6 +253,7 @@ int	main()
 				pthread_join(t[i], NULL);
 			}
 		}
+		gettimeofday(&((philos.ph_arr + i)->last), NULL);
 		// printf("Philo %d is created\n", philos.ph_arr[i].index);
 		// pthread_detach(t[i]);
 		i++;

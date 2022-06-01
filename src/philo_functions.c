@@ -17,6 +17,26 @@
 #define MIN(a,b) (((a)<(b))?(a):(b))
 #define MAX(a,b) (((a)>(b))?(a):(b))
 
+long long	timestamp(void)
+{
+	struct timeval tv;
+
+	gettimeofday(&tv, NULL);
+	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
+}
+
+void		smart_sleep(long long time, t_philo *philo)
+{
+	long long i;
+	
+	i = timestamp();
+	while (!(philo->is_to_die))
+	{
+		if (i - timestamp() >= time)
+			break ;
+		usleep(50);
+	}
+}
 
 
 void	ph_sleep(t_philo *philo)
@@ -30,7 +50,8 @@ void	ph_sleep(t_philo *philo)
 	printf("%lu %d is sleeping\n", tv.tv_sec + tv.tv_usec - 
 		philo->start.tv_sec - philo->start.tv_usec, philo->index);
 	pthread_mutex_unlock(philo->out);
-	usleep(philo->to_sleep * 1000);
+	// usleep(philo->to_sleep * 1000);
+	smart_sleep(philo->to_sleep * 1000, philo);
 }
 
 void	ph_think(t_philo *philo)
@@ -83,7 +104,8 @@ void	ph_eat(t_philo *philo)
 	printf("%lu %d is eating\n", tv.tv_sec + tv.tv_usec - 
 		philo->start.tv_sec - philo->start.tv_usec, philo->index);
 	pthread_mutex_unlock(philo->out);
-	usleep(philo->to_eat * 1000);
+	// usleep(philo->to_eat * 1000);
+	smart_sleep(philo->to_eat * 1000, philo);
 	
 
 }
@@ -104,7 +126,7 @@ void	*philosopher(void *data)
 	// 	usleep(2500);
 
 	// i = 0;
-	while (1)
+	while (!(*(philo->is_to_die)))
 	{ 
 		if (*(philo->is_to_die))
 			return 0;
@@ -157,4 +179,5 @@ void	*philosopher(void *data)
 		ph_think(philo);
 		// i++;
 	}
+	return (0);
 }
