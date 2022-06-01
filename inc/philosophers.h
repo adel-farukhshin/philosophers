@@ -18,6 +18,7 @@
 
 typedef struct s_philo {
 	struct timeval 			last;
+	struct timeval			start;
 	int						to_die;
 	int						to_eat;
 	int						to_sleep;

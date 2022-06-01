@@ -19,24 +19,27 @@
 
 
 
-void	ph_sleep(int nb, int to_sleep)
+void	ph_sleep(t_philo *philo)
 {
 	struct timeval tv;
 
 	gettimeofday(&tv, NULL);
-	tv.tv_usec = tv.tv_usec / 1000;
-	printf("%lu %d is sleeping\n", tv.tv_usec, nb);
-	usleep(to_sleep * 1000);
+	tv.tv_sec *= 1000;
+	tv.tv_usec /= 1000;
+	printf("%lu %d is sleeping\n", tv.tv_sec + tv.tv_usec - 
+		philo->start.tv_sec - philo->start.tv_usec, philo->index);
+	usleep(philo->to_sleep * 1000);
 }
 
-void	ph_think(int nb)
+void	ph_think(t_philo *philo)
 {
 	struct timeval tv;
 
 	gettimeofday(&tv, NULL);
-	tv.tv_usec = tv.tv_usec / 1000;
-	printf("%lu %d is thinking\n", tv.tv_usec, nb);
-	// usleep(TIME_TO_THINK);
+	tv.tv_sec *= 1000;
+	tv.tv_usec /= 1000;
+	printf("%lu %d is thinking\n", tv.tv_sec + tv.tv_usec - 
+		philo->start.tv_sec - philo->start.tv_usec, philo->index);	
 }
 
 
@@ -65,12 +68,16 @@ void	ph_eat(t_philo *philo)
 	struct timeval tv;
 
 	gettimeofday(&tv, NULL);
+	tv.tv_sec *= 1000;
 	tv.tv_usec = tv.tv_usec / 1000;
 
 	philo->last.tv_sec = tv.tv_sec;
 	philo->last.tv_usec = tv.tv_usec;
+	printf("%lu %d is eating\n", tv.tv_sec + tv.tv_usec - 
+		philo->start.tv_sec - philo->start.tv_usec, philo->index);
 	usleep(philo->to_eat * 1000);
-	printf("%lu %d is eating\n", tv.tv_usec, philo->index);
+	
+
 }
 
 
@@ -98,14 +105,18 @@ void	*philosopher(void *data)
 		// Take the first fork 
 		pthread_mutex_lock(MIN(philo->fork_r, philo->fork_l));
 		gettimeofday(&tv, NULL);
+		tv.tv_sec *= 1000;
 		tv.tv_usec /= 1000;
-		printf("%lu %d has taken a fork\n", tv.tv_usec, philo->index);
+		printf("%lu %d has taken a fork\n", tv.tv_sec + tv.tv_usec - 
+			philo->start.tv_sec - philo->start.tv_usec, philo->index);
 		
 		// Take the second fork 
 		pthread_mutex_lock(MAX(philo->fork_r, philo->fork_l));
 		gettimeofday(&tv, NULL);
+		tv.tv_sec *= 1000;
 		tv.tv_usec /= 1000;
-		printf("%lu %d has taken a fork\n", tv.tv_usec, philo->index);
+		printf("%lu %d has taken a fork\n", tv.tv_sec + tv.tv_usec - 
+			philo->start.tv_sec - philo->start.tv_usec, philo->index);
 
 		// Eating
 		ph_eat(philo);
@@ -119,12 +130,12 @@ void	*philosopher(void *data)
 			return 0;
 		
 		// Sleep
-		ph_sleep(philo->index, philo->to_sleep);
+		ph_sleep(philo);
 		if (*(philo->is_to_die))
 			return 0;
 		
 		// Think
-		ph_think(philo->index);
+		ph_think(philo);
 		// i++;
 	}
 }
