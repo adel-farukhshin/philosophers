@@ -75,8 +75,10 @@ void	ph_eat(t_philo *philo)
 	tv.tv_sec *= 1000;
 	tv.tv_usec = tv.tv_usec / 1000;
 
+	pthread_mutex_lock(philo->last_mutex);
 	philo->last.tv_sec = tv.tv_sec;
 	philo->last.tv_usec = tv.tv_usec;
+	pthread_mutex_unlock(philo->last_mutex);
 	pthread_mutex_lock(philo->out);
 	printf("%lu %d is eating\n", tv.tv_sec + tv.tv_usec - 
 		philo->start.tv_sec - philo->start.tv_usec, philo->index);
@@ -98,7 +100,8 @@ void	*philosopher(void *data)
 
 	struct timeval tv;
 
-	gettimeofday(&tv, NULL);
+	// if (philo->index % 2 == 0)
+	// 	usleep(2500);
 
 	// i = 0;
 	while (1)
