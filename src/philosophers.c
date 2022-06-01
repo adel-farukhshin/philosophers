@@ -133,13 +133,27 @@ int	is_died(t_philos *philos)
 			- philos->ph_arr[i].last.tv_usec) > philos->ph_arr->to_die) // tv.tv_sec - philos->ph_arr[i].last.tv_sec * 1000 + 
 		{
 			philos->is_to_die = 1;
+			pthread_mutex_lock(philos->ph_arr->out);
 			printf("%lu %d is died\n", now.tv_sec + now.tv_usec 
 			- philos->ph_arr[i].start.tv_sec - philos->ph_arr[i].start.tv_usec, philos->ph_arr[i].index);
+			pthread_mutex_unlock(philos->ph_arr->out);
 			return (1);
 		}
 		i++;
 	}
 	return (0);
+}
+
+void	out_to_philos(t_philos *philos, pthread_mutex_t *out)
+{
+	int	i;
+
+	i = 1;
+	while (i <= philos->ph_num)
+	{
+		philos->ph_arr[i - 1].out = out;
+		i++;
+	}
 }
 
 int	main()
@@ -176,6 +190,19 @@ int	main()
 		return (3);
 	forks_to_philos(&philos, forks);
 	
+	// Out Mutex Initialization
+	pthread_mutex_t out;
+
+	if (pthread_mutex_init(&out, NULL))
+	{	
+		forks_delete(forks, philos.ph_num - 1);
+		free(forks);
+		free(philos.ph_arr);
+		return (4);
+	}
+	out_to_philos(&philos, &out);
+
+
 	// Threads Initialization
 	pthread_t *t;
 	t = malloc(sizeof(pthread_t) * philos.ph_num); // может это перенести в philos
@@ -184,6 +211,7 @@ int	main()
 		forks_delete(forks, philos.ph_num - 1);
 		free(forks);
 		free(philos.ph_arr);
+		pthread_mutex_destroy(&out);
 		return (4);
 	}
 	i = 0;
@@ -226,4 +254,5 @@ int	main()
 	forks_delete(forks, philos.ph_num - 1);
 	free(forks);
 	free(philos.ph_arr);
+	pthread_mutex_destroy(&out);
 }

@@ -26,8 +26,10 @@ void	ph_sleep(t_philo *philo)
 	gettimeofday(&tv, NULL);
 	tv.tv_sec *= 1000;
 	tv.tv_usec /= 1000;
+	pthread_mutex_lock(philo->out);
 	printf("%lu %d is sleeping\n", tv.tv_sec + tv.tv_usec - 
 		philo->start.tv_sec - philo->start.tv_usec, philo->index);
+	pthread_mutex_unlock(philo->out);
 	usleep(philo->to_sleep * 1000);
 }
 
@@ -38,8 +40,10 @@ void	ph_think(t_philo *philo)
 	gettimeofday(&tv, NULL);
 	tv.tv_sec *= 1000;
 	tv.tv_usec /= 1000;
+	pthread_mutex_lock(philo->out);
 	printf("%lu %d is thinking\n", tv.tv_sec + tv.tv_usec - 
 		philo->start.tv_sec - philo->start.tv_usec, philo->index);	
+	pthread_mutex_unlock(philo->out);
 }
 
 
@@ -73,8 +77,10 @@ void	ph_eat(t_philo *philo)
 
 	philo->last.tv_sec = tv.tv_sec;
 	philo->last.tv_usec = tv.tv_usec;
+	pthread_mutex_lock(philo->out);
 	printf("%lu %d is eating\n", tv.tv_sec + tv.tv_usec - 
 		philo->start.tv_sec - philo->start.tv_usec, philo->index);
+	pthread_mutex_unlock(philo->out);
 	usleep(philo->to_eat * 1000);
 	
 
@@ -107,16 +113,20 @@ void	*philosopher(void *data)
 		gettimeofday(&tv, NULL);
 		tv.tv_sec *= 1000;
 		tv.tv_usec /= 1000;
+		pthread_mutex_lock(philo->out);
 		printf("%lu %d has taken a fork\n", tv.tv_sec + tv.tv_usec - 
 			philo->start.tv_sec - philo->start.tv_usec, philo->index);
-		
+		pthread_mutex_unlock(philo->out);
+
 		// Take the second fork 
 		pthread_mutex_lock(MAX(philo->fork_r, philo->fork_l));
 		gettimeofday(&tv, NULL);
 		tv.tv_sec *= 1000;
 		tv.tv_usec /= 1000;
+		pthread_mutex_lock(philo->out);
 		printf("%lu %d has taken a fork\n", tv.tv_sec + tv.tv_usec - 
 			philo->start.tv_sec - philo->start.tv_usec, philo->index);
+		pthread_mutex_unlock(philo->out);
 
 		// Eating
 		ph_eat(philo);

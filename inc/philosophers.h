@@ -25,6 +25,7 @@ typedef struct s_philo {
 	int						index;
 	pthread_mutex_t *		fork_r;
 	pthread_mutex_t *		fork_l;
+	pthread_mutex_t *		out;
 	int						*is_to_die;
 }	t_philo;
 
