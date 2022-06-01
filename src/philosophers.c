@@ -181,7 +181,7 @@ int	main()
 	i = 0;
 	while (i < philos.ph_num)
 	{
-		if(pthread_create((t + i), NULL, (void *)&philosopher, (philos.ph_arr + i)))
+		if(pthread_create((t + i), NULL, philosopher, (philos.ph_arr + i)))
 		{
 			while (i > -1)
 			{

@@ -40,6 +40,6 @@ typedef struct s_philos {
 #define NB_OF_PHILO 5
 #define T_TO_EAT -1
 
-void	philosopher(t_philo *philo);
+void	*philosopher(void *data);
 
 #endif
