@@ -43,6 +43,8 @@ typedef struct s_philos {
 #define NB_OF_PHILO 5
 #define T_TO_EAT -1
 
-void	*philosopher(void *data);
+void		*philosopher(void *data);
+long long	timestamp(void);
+long long	timedif(long long last, long long next);
 
 #endif

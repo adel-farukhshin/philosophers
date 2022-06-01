@@ -25,6 +25,11 @@ long long	timestamp(void)
 	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }
 
+long long	timedif(long long last, long long next)
+{
+	return (next - last);
+}
+
 void		smart_sleep(long long time, t_philo *philo)
 {
 	long long i;
