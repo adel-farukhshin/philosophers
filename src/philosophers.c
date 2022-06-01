@@ -134,7 +134,7 @@ int	is_died(t_philos *philos)
 		{
 			philos->is_to_die = 1;
 			pthread_mutex_lock(philos->ph_arr->out);
-			printf("%lu %d is died\n", now.tv_sec + now.tv_usec 
+			printf("%lu %d died\n", now.tv_sec + now.tv_usec 
 			- philos->ph_arr[i].start.tv_sec - philos->ph_arr[i].start.tv_usec, philos->ph_arr[i].index);
 			pthread_mutex_unlock(philos->ph_arr->out);
 			return (1);
