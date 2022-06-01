@@ -17,8 +17,8 @@
 #include <pthread.h>
 
 typedef struct s_philo {
-	struct timeval 			last;
-	struct timeval			start;
+	long long				last;
+	long long				start;
 	int						to_die;
 	int						to_eat;
 	int						to_sleep;
@@ -46,5 +46,6 @@ typedef struct s_philos {
 void		*philosopher(void *data);
 long long	timestamp(void);
 long long	timedif(long long last, long long next);
+void		print_action(t_philo *philo, char *msg);
 
 #endif

@@ -18,7 +18,7 @@
 
 #include "philosophers.h"
 
-int	init_philos(t_philos *philos, struct timeval tv)
+int	init_philos(t_philos *philos)
 {
 	int	i;
 
@@ -34,10 +34,9 @@ int	init_philos(t_philos *philos, struct timeval tv)
 	}
 	while (i <= philos->ph_num)
 	{
-		philos->ph_arr[i - 1].start.tv_sec = tv.tv_sec;
-		philos->ph_arr[i - 1].start.tv_usec = tv.tv_usec;
-		philos->ph_arr[i - 1].last.tv_sec = tv.tv_sec;
-		philos->ph_arr[i - 1].last.tv_usec = tv.tv_usec;
+		philos->ph_arr[i - 1].start = timestamp();
+		// philos->ph_arr[i - 1].last.tv_sec = tv.tv_sec;
+		// philos->ph_arr[i - 1].last.tv_usec = tv.tv_usec;
 		philos->ph_arr[i - 1].to_die = TIME_TO_DIE;
 		philos->ph_arr[i - 1].to_eat = TIME_TO_EAT;
 		philos->ph_arr[i - 1].to_sleep = TIME_TO_SLEEP;
@@ -117,29 +116,33 @@ void	forks_to_philos(t_philos *philos, pthread_mutex_t *forks)
 int	is_died(t_philos *philos)
 {
 	int	i;
-	struct timeval now;
-
+	// struct timeval now;
+	long long	now;
 	
 	i = 0;
 	// printf("now: sec %ld, ms %u\n", tv.tv_sec, tv.tv_usec);
 	while (i < philos->ph_num && !(philos->is_to_die))
 	{
-		gettimeofday(&now, NULL);
-		now.tv_sec *= 1000;
-		now.tv_usec /= 1000;
+		// gettimeofday(&now, NULL);
+		// now.tv_sec *= 1000;
+		// now.tv_usec /= 1000;
+
+		now = timestamp();
 		// delta(philos->ph_arr[i].last, tv);
 		// printf("now: sec %ld, ms %u; delta: %ld %u\n", tv.tv_sec, tv.tv_usec, 
 		// 	tv.tv_sec - philos->ph_arr[i].last.tv_sec, tv.tv_usec - philos->ph_arr[i].last.tv_usec);
 		pthread_mutex_lock(((philos->ph_arr) + i)->last_mutex);
-		if ((now.tv_sec + now.tv_usec - philos->ph_arr[i].last.tv_sec
-			- philos->ph_arr[i].last.tv_usec) > philos->ph_arr->to_die) // tv.tv_sec - philos->ph_arr[i].last.tv_sec * 1000 + 
+		if (timedif(philos->ph_arr[i].last, now) >= philos->ph_arr->to_die) // tv.tv_sec - philos->ph_arr[i].last.tv_sec * 1000 + 
 		{
 			pthread_mutex_unlock(((philos->ph_arr) + i)->last_mutex);
+			
+			print_action(philos->ph_arr + i, "died");
 			philos->is_to_die = 1;
-			pthread_mutex_lock(philos->ph_arr->out);
-			printf("%lu %d died\n", now.tv_sec + now.tv_usec 
-			- philos->ph_arr[i].start.tv_sec - philos->ph_arr[i].start.tv_usec, philos->ph_arr[i].index);
-			pthread_mutex_unlock(philos->ph_arr->out);
+			// pthread_mutex_lock(philos->ph_arr->out);
+			// printf("%llu ", timedif(philos->ph_arr->start, timestamp()));
+			// printf("%d ", philos->ph_arr[i].index);
+			// printf("died\n");
+			// pthread_mutex_unlock(philos->ph_arr->out);
 			return (1);
 		}
 		pthread_mutex_unlock(((philos->ph_arr) + i)->last_mutex);
@@ -175,15 +178,10 @@ void	last_mutex_to_philos(t_philos *philos, pthread_mutex_t *last_mutex)
 int	main()
 {
 	t_philos philos;
-	struct timeval tv;
 	int	i = 0;
 
 	// Initialize
-	if (gettimeofday(&tv, NULL))
-		return (1);
-	tv.tv_sec *= 1000;
-	tv.tv_usec /= 1000;
-	if (!init_philos(&philos, tv))
+	if (!init_philos(&philos))
 		return (2);
 	// printf("sec %ld, ms: %u\n", tv.tv_sec, tv.tv_usec);
 
@@ -253,7 +251,8 @@ int	main()
 				pthread_join(t[i], NULL);
 			}
 		}
-		gettimeofday(&((philos.ph_arr + i)->last), NULL);
+		(philos.ph_arr + i)->last = timestamp();
+		// gettimeofday(&((philos.ph_arr + i)->last), NULL);
 		// printf("Philo %d is created\n", philos.ph_arr[i].index);
 		// pthread_detach(t[i]);
 		i++;
