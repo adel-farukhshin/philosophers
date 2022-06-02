@@ -16,18 +16,29 @@
 #include <sys/time.h>
 #include <pthread.h>
 
-typedef struct s_philo {
-	long long				last;
+typedef struct s_data {
 	long long				start;
 	int						to_die;
 	int						to_eat;
 	int						to_sleep;
+	pthread_mutex_t *		out_m;
+	pthread_mutex_t *		last_m;
+	int						is_to_die;
+}	t_data;
+
+typedef struct s_philo {
+	long long				last; // last meal
+	// long long				start;
+	// int						to_die;
+	// int						to_eat;
+	// int						to_sleep;
 	int						index;
 	pthread_mutex_t *		fork_r;
 	pthread_mutex_t *		fork_l;
-	pthread_mutex_t *		out;
-	pthread_mutex_t *		last_mutex;
-	int						*is_to_die;
+	// pthread_mutex_t *		out;
+	// pthread_mutex_t *		last_mutex;
+	// int						*is_to_die;
+	t_data					*data;
 }	t_philo;
 
 typedef struct s_philos {
