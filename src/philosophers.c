@@ -18,86 +18,86 @@
 
 #include "philosophers.h"
 
-int	init_philos(t_philos *philos)
-{
-	int	i;
+// int	init_philos(t_philos *philos)
+// {
+// 	int	i;
 
-	i = 1;
-	philos->ph_num = NB_OF_PHILO;
-	philos->times_to_eat = T_TO_EAT;
-	philos->is_to_die = 0;
-	philos->ph_arr = malloc(sizeof(t_philo) * philos->ph_num);
-	if (!philos->ph_arr)
-	{
-		free(philos);
-		return (0);
-	}
-	while (i <= philos->ph_num)
-	{
-		philos->ph_arr[i - 1].start = timestamp();
-		// philos->ph_arr[i - 1].last.tv_sec = tv.tv_sec;
-		// philos->ph_arr[i - 1].last.tv_usec = tv.tv_usec;
-		philos->ph_arr[i - 1].to_die = TIME_TO_DIE;
-		philos->ph_arr[i - 1].to_eat = TIME_TO_EAT;
-		philos->ph_arr[i - 1].to_sleep = TIME_TO_SLEEP;
-		philos->ph_arr[i - 1].index = i;
-		philos->ph_arr[i - 1].is_to_die = &philos->is_to_die;
-		i++;
-	}
-	return (1);
-}
+// 	i = 1;
+// 	philos->ph_num = NB_OF_PHILO;
+// 	philos->times_to_eat = T_TO_EAT;
+// 	philos->is_to_die = 0;
+// 	philos->ph_arr = malloc(sizeof(t_philo) * philos->ph_num);
+// 	if (!philos->ph_arr)
+// 	{
+// 		free(philos);
+// 		return (0);
+// 	}
+// 	while (i <= philos->ph_num)
+// 	{
+// 		philos->ph_arr[i - 1].start = timestamp();
+// 		// philos->ph_arr[i - 1].last.tv_sec = tv.tv_sec;
+// 		// philos->ph_arr[i - 1].last.tv_usec = tv.tv_usec;
+// 		philos->ph_arr[i - 1].to_die = TIME_TO_DIE;
+// 		philos->ph_arr[i - 1].to_eat = TIME_TO_EAT;
+// 		philos->ph_arr[i - 1].to_sleep = TIME_TO_SLEEP;
+// 		philos->ph_arr[i - 1].index = i;
+// 		philos->ph_arr[i - 1].is_to_die = &philos->is_to_die;
+// 		i++;
+// 	}
+// 	return (1);
+// }
 
-void	forks_delete(pthread_mutex_t *forks, int nb)
-{
-	while (nb > -1)
-	{
-		pthread_mutex_destroy(forks + nb);
-		nb--;
-	}
-}
+// void	forks_delete(pthread_mutex_t *forks, int nb)
+// {
+// 	while (nb > -1)
+// 	{
+// 		pthread_mutex_destroy(forks + nb);
+// 		nb--;
+// 	}
+// }
 
-pthread_mutex_t *forks_init(t_philos *philos)
-{
-	pthread_mutex_t *forks;
-	int				i;
+// pthread_mutex_t *forks_init(t_philos *philos)
+// {
+// 	pthread_mutex_t *forks;
+// 	int				i;
 
-	i = 0;
-	forks = malloc(sizeof(pthread_mutex_t) * philos->ph_num);
-	if (!forks)
-	{
-		free(philos->ph_arr);
-		return (NULL);	
-	}
-	while (i < philos->ph_num)
-	{
-		if (pthread_mutex_init(forks + i, NULL))
-		{
-			forks_delete(forks, i - 1);
-			free(philos->ph_arr);
-			return (NULL);
-		}
-		i++;
-	}
-	return (forks);
-}
+// 	i = 0;
+// 	forks = malloc(sizeof(pthread_mutex_t) * philos->ph_num);
+// 	if (!forks)
+// 	{
+// 		free(philos->ph_arr);
+// 		return (NULL);	
+// 	}
+// 	while (i < philos->ph_num)
+// 	{
+// 		if (pthread_mutex_init(forks + i, NULL))
+// 		{
+// 			forks_delete(forks, i - 1);
+// 			free(philos->ph_arr);
+// 			return (NULL);
+// 		}
+// 		i++;
+// 	}
+// 	return (forks);
+// }
 
-void	forks_to_philos(t_philos *philos, pthread_mutex_t *forks)
-{
-	int	i;
+// void	forks_to_philos(t_philos *philos, pthread_mutex_t *forks)
+// {
+// 	int	i;
 
-	i = 1;
-	while (i <= philos->ph_num)
-	{
-		philos->ph_arr[i - 1].fork_l = forks + i - 1;
-		if (i == 1)
-			philos->ph_arr[i - 1].fork_r = forks + philos->ph_num - 1;
-		else
-			philos->ph_arr[i - 1].fork_r = forks + i - 2;
-		// printf("philo %d r %p, l %p\n", philos->ph_arr[i - 1].index, philos->ph_arr[i - 1].fork_r, 
-		// 		philos->ph_arr[i - 1].fork_l);
-		i++;
-	}
-}
+// 	i = 1;
+// 	while (i <= philos->ph_num)
+// 	{
+// 		philos->ph_arr[i - 1].fork_l = forks + i - 1;
+// 		if (i == 1)
+// 			philos->ph_arr[i - 1].fork_r = forks + philos->ph_num - 1;
+// 		else
+// 			philos->ph_arr[i - 1].fork_r = forks + i - 2;
+// 		// printf("philo %d r %p, l %p\n", philos->ph_arr[i - 1].index, philos->ph_arr[i - 1].fork_r, 
+// 		// 		philos->ph_arr[i - 1].fork_l);
+// 		i++;
+// 	}
+// }
 
 // unsigned long delta(struct timeval start, struct timeval end)
 // {
@@ -181,6 +181,8 @@ int	main()
 	int	i = 0;
 
 	// Initialize
+	initialize(&philos);
+
 	if (!init_philos(&philos))
 		return (2);
 	// printf("sec %ld, ms: %u\n", tv.tv_sec, tv.tv_usec);
