@@ -58,9 +58,12 @@ typedef struct s_philos {
 #define T_TO_EAT -1
 
 int			initialize(t_philos *philos);
+void		all_mutex_delete(t_philos *philos, int mode);
+
 void		*philosopher(void *data);
 long long	timestamp(void);
 long long	timedif(long long last, long long next);
 void		print_action(t_philo *philo, char *msg);
+
 
 #endif

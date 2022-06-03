@@ -52,7 +52,7 @@ void	mutex_delete(pthread_mutex_t *mutex, int nb)
 		pthread_mutex_destroy(mutex + nb);
 		nb--;
 	}
-	free(mutex + nb); // check
+	// free(mutex + nb); // check
 }
 
 int mutex_init(pthread_mutex_t **type, int nb)
@@ -107,6 +107,16 @@ int mutex_init(pthread_mutex_t **type, int nb)
 // 	return (0);
 // }
 
+void	all_mutex_delete(t_philos *philos, int mode)
+{
+	if (mode > 0)
+		mutex_delete(philos->forks, philos->ph_num - 1);
+	if (mode > 1)
+		mutex_delete(philos->last_mutexes, philos->ph_num - 1);
+	if (mode > 2)
+		mutex_delete(philos->data.out_m, 1 - 1);
+}
+
 int		initialize(t_philos *philos)
 // number_of_philosophers time_to_die time_to_eat time_to_sleep
 // [number_of_times_each_philosopher_must_eat]
@@ -123,20 +133,20 @@ int		initialize(t_philos *philos)
 		return (1);
 	if (mutex_init(&(philos->last_mutexes), philos->ph_num))
 	{
-		mutex_delete(philos->forks, philos->ph_num);
+		mutex_delete(philos->forks, philos->ph_num - 1);
 		return (2);
 	}
 	if (mutex_init(&(philos->data.out_m), 1))
 	{
-		mutex_delete(philos->forks, philos->ph_num);
-		mutex_delete(philos->last_mutexes, philos->ph_num);
+		mutex_delete(philos->forks, philos->ph_num - 1);
+		mutex_delete(philos->last_mutexes, philos->ph_num - 1);
 		return (3);
 	}
 	if (init_philos(philos))
 	{
-		mutex_delete(philos->forks, philos->ph_num);
-		mutex_delete(philos->last_mutexes, philos->ph_num);
-		mutex_delete(philos->data.out_m, 1);
+		mutex_delete(philos->forks, philos->ph_num - 1);
+		mutex_delete(philos->last_mutexes, philos->ph_num - 1);
+		mutex_delete(philos->data.out_m, 1 - 1);
 		return (4);
 	}
 	return (0);
@@ -147,10 +157,10 @@ int		initialize(t_philos *philos)
 // int	main()
 // {
 // 	t_philos	philos;
-//	
+	
 // 	initialize(&philos);
 // 	int	i = 0;
-//
+
 // 	printf("ph_arr %p; ph_num %d; times_to_eat %d\n", philos.ph_arr,
 // 		philos.ph_num, philos.times_to_eat);
 // 	printf("ph_forks %p; last_mutexes %p\n", philos.forks, philos.last_mutexes);
@@ -169,8 +179,12 @@ int		initialize(t_philos *philos)
 // 		printf("Is_to_die %d\n", philos.ph_arr[i].data->is_to_die);
 // 		i++;
 // 	}
-// 	mutex_delete(philos.forks, philos.ph_num);
-// 	mutex_delete(philos.last_mutexes, philos.ph_num);
-// 	mutex_delete(philos.data.out_m, 1);
+// 	mutex_delete(philos.forks, philos.ph_num - 1);
+// 	mutex_delete(philos.last_mutexes, philos.ph_num - 1);
+// 	mutex_delete(philos.data.out_m, 1 - 1);
+
+// 	free(philos.forks);
+// 	free(philos.last_mutexes);
+// 	free(philos.data.out_m);
 // 	free(philos.ph_arr);
 // }
