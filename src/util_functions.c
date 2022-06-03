@@ -12,22 +12,22 @@ long long	timestamp(void)
 	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }
 
-long long	timedif(long long last, long long next)
+long long	timedif(long long past, long long pres)
 {
-	return (next - last);
+	return (pres - past);
 }
 
 void	print_action(t_philo *philo, char *msg)
 {
 	// lock the writing mutex
-	pthread_mutex_lock(philo->out);
-	if (!(*(philo->is_to_die)))
+	pthread_mutex_lock(philo->data->out_m);
+	if (!(philo->data->is_to_die))
 	{
-		printf("%llu ", timedif(philo->start, timestamp()));
+		printf("%llu ", timedif(philo->data->start, timestamp()));
 		printf("%d ", philo->index);
 		printf("%s\n", msg);
 	}
-	pthread_mutex_unlock(philo->out);
+	pthread_mutex_unlock(philo->data->out_m);
 	// unlock the writing mutex
 	return ;
 }

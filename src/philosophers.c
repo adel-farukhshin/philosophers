@@ -120,7 +120,7 @@
 int	main()
 {
 	t_philos philos;
-	int	i = 0;
+	// int	i = 0;
 
 	// Initialize
 	if (initialize(&philos))
