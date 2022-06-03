@@ -113,67 +113,9 @@
 // 	return (secs);
 // }
 
-int	is_died(t_philos *philos)
-{
-	int	i;
-	// struct timeval now;
-	long long	now;
-	
-	i = 0;
-	// printf("now: sec %ld, ms %u\n", tv.tv_sec, tv.tv_usec);
-	while (i < philos->ph_num && !(philos->is_to_die))
-	{
-		// gettimeofday(&now, NULL);
-		// now.tv_sec *= 1000;
-		// now.tv_usec /= 1000;
 
-		now = timestamp();
-		// delta(philos->ph_arr[i].last, tv);
-		// printf("now: sec %ld, ms %u; delta: %ld %u\n", tv.tv_sec, tv.tv_usec, 
-		// 	tv.tv_sec - philos->ph_arr[i].last.tv_sec, tv.tv_usec - philos->ph_arr[i].last.tv_usec);
-		pthread_mutex_lock(((philos->ph_arr) + i)->last_mutex);
-		if (timedif(philos->ph_arr[i].last, now) >= philos->ph_arr->to_die) // tv.tv_sec - philos->ph_arr[i].last.tv_sec * 1000 + 
-		{
-			pthread_mutex_unlock(((philos->ph_arr) + i)->last_mutex);
-			
-			print_action(philos->ph_arr + i, "died");
-			philos->is_to_die = 1;
-			// pthread_mutex_lock(philos->ph_arr->out);
-			// printf("%llu ", timedif(philos->ph_arr->start, timestamp()));
-			// printf("%d ", philos->ph_arr[i].index);
-			// printf("died\n");
-			// pthread_mutex_unlock(philos->ph_arr->out);
-			return (1);
-		}
-		pthread_mutex_unlock(((philos->ph_arr) + i)->last_mutex);
-		i++;
-	}
-	return (0);
-}
 
-void	out_to_philos(t_philos *philos, pthread_mutex_t *out)
-{
-	int	i;
 
-	i = 1;
-	while (i <= philos->ph_num)
-	{
-		philos->ph_arr[i - 1].out = out;
-		i++;
-	}
-}
-
-void	last_mutex_to_philos(t_philos *philos, pthread_mutex_t *last_mutex)
-{
-	int	i;
-
-	i = 1;
-	while (i <= philos->ph_num)
-	{
-		philos->ph_arr[i - 1].last_mutex = last_mutex;
-		i++;
-	}
-}
 
 int	main()
 {
@@ -181,109 +123,51 @@ int	main()
 	int	i = 0;
 
 	// Initialize
-	initialize(&philos);
+	if (initialize(&philos))
+		return (1);
 
-	if (!init_philos(&philos))
+	if (launch(&philos))
 		return (2);
-	// printf("sec %ld, ms: %u\n", tv.tv_sec, tv.tv_usec);
 
-	// Test initializing
-	// i = 1;
-	// while (i <= philos.ph_num)
-	// {
-	// 	printf("Phil %d, time: %ld,%u, to_die: %d, to_eat: %d, to_sleep: %d\n", philos.ph_arr[i - 1].index,
-	// 	philos.ph_arr[i - 1].start.tv_sec, philos.ph_arr[i - 1].start.tv_usec, philos.ph_arr[i - 1].to_die, 
-	// 	philos.ph_arr[i - 1].to_eat, philos.ph_arr[i - 1].to_sleep);
-	// 	i++;
-	// }
-
-
-	// Mutex Initialization
-	pthread_mutex_t *forks;
-
-	forks = forks_init(&philos);
-	if (!forks)
-		return (3);
-	forks_to_philos(&philos, forks);
-	
-	// Out Mutex Initialization
-	pthread_mutex_t out;
-
-	if (pthread_mutex_init(&out, NULL))
-	{	
-		forks_delete(forks, philos.ph_num - 1);
-		free(forks);
-		free(philos.ph_arr);
-		return (4);
-	}
-	out_to_philos(&philos, &out);
-
-	// Last_mutex Initialization
-	pthread_mutex_t last_mutex;
-	if (pthread_mutex_init(&out, NULL))
-	{	
-		forks_delete(forks, philos.ph_num - 1);
-		free(forks);
-		free(philos.ph_arr);
-		pthread_mutex_destroy(&out);
-		return (4);
-	}
-	last_mutex_to_philos(&philos, &out);
 
 	// Threads Initialization
-	pthread_t *t;
-	t = malloc(sizeof(pthread_t) * philos.ph_num); // может это перенести в philos
-	if (!t)
-	{
-		forks_delete(forks, philos.ph_num - 1);
-		free(forks);
-		free(philos.ph_arr);
-		pthread_mutex_destroy(&out);
-		pthread_mutex_destroy(&last_mutex);
-		return (4);
-	}
-	i = 0;
-	while (i < philos.ph_num)
-	{
-		if(pthread_create((t + i), NULL, philosopher, (philos.ph_arr + i)))
-		{
-			while (i > -1)
-			{
-				i--;
-				pthread_join(t[i], NULL);
-			}
-		}
-		(philos.ph_arr + i)->last = timestamp();
-		// gettimeofday(&((philos.ph_arr + i)->last), NULL);
-		// printf("Philo %d is created\n", philos.ph_arr[i].index);
-		// pthread_detach(t[i]);
-		i++;
-	}
-	while (!is_died(&philos)); // should this function be in infinite cycle?
+	// pthread_t *t;
+	// t = malloc(sizeof(pthread_t) * philos.ph_num); // может это перенести в philos
+	// if (!t)
+	// {
+	// 	forks_delete(forks, philos.ph_num - 1);
+	// 	free(forks);
+	// 	free(philos.ph_arr);
+	// 	pthread_mutex_destroy(&out);
+	// 	pthread_mutex_destroy(&last_mutex);
+	// 	return (4);
+	// }
+
+	// i = 0;
+	// while (i < philos.ph_num)
+	// {
+	// 	if(pthread_create((t + i), NULL, philosopher, (philos.ph_arr + i)))
+	// 	{
+	// 		while (i > -1)
+	// 		{
+	// 			i--;
+	// 			pthread_join(t[i], NULL);
+	// 		}
+	// 	}
+	// 	(philos.ph_arr + i)->last = timestamp();
+	// 	// gettimeofday(&((philos.ph_arr + i)->last), NULL);
+	// 	// printf("Philo %d is created\n", philos.ph_arr[i].index);
+	// 	// pthread_detach(t[i]);
+	// 	i++;
+	// }
+	// while (!is_died(&philos)); // should this function be in infinite cycle?
 	
 	// is_died(&philos);
 
-	// End program
-	i = 0;
-	while (i < philos.ph_num)
-	{
-		if (pthread_join(t[i], NULL))
-			perror("Failed to join error");
-		else
-			// printf("Philo %d is deleted\n", i);
-			
-		i++;
-	} // разница между detached и join в том, что в первом случае ресурсы освобождаются сразу по выходу из треда, в то время как, во втором случае необходим вызов join
-	
-	// pthread_exit(0);
-
-
-	// printf("time at exit: sec %ld, ms %u\n", tv.tv_sec, tv.tv_usec);
-	free(t);
-
-	forks_delete(forks, philos.ph_num - 1);
-	free(forks);
+	// End program	
+	all_mutex_delete(&philos, 3);
+	free(philos.forks);
+	free(philos.last_mutexes);
+	free(philos.data.out_m);
 	free(philos.ph_arr);
-	pthread_mutex_destroy(&out);
-	pthread_mutex_destroy(&last_mutex);
 }

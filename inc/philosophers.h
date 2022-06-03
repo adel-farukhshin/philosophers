@@ -27,7 +27,7 @@ typedef struct s_data {
 }	t_data;
 
 typedef struct s_philo {
-	long long				last; // last meal
+	long long				last_meal; // last meal
 	// long long				start;
 	// int						to_die;
 	// int						to_eat;
@@ -60,6 +60,7 @@ typedef struct s_philos {
 int			initialize(t_philos *philos);
 void		all_mutex_delete(t_philos *philos, int mode);
 
+int			launch(t_philos *philos);
 void		*philosopher(void *data);
 long long	timestamp(void);
 long long	timedif(long long last, long long next);
