@@ -1,6 +1,8 @@
 
 #include "philosophers.h"
 #include <stdlib.h>
+// #include <stdio.h>
+#include <unistd.h>
 
 int	is_died(t_philos *philos)
 {
@@ -12,12 +14,13 @@ int	is_died(t_philos *philos)
 	{
 		now = timestamp();
 		pthread_mutex_lock(((philos->ph_arr) + i)->last_m);
-		if (timedif(philos->ph_arr[i].last_meal, now) >= philos->data.is_to_die)
+		if (timedif(philos->ph_arr[i].last_meal, now) >= philos->data.to_die)
 		{
+			// printf("last %llu, now %llu, %d\n", philos->ph_arr[i].last_meal, now, philos->data.is_to_die);
 			pthread_mutex_unlock(((philos->ph_arr) + i)->last_m);
 			print_action(philos->ph_arr + i, "died");
 			philos->data.is_to_die = 1;
-
+			// usleep(100);
 			return (1);
 		}
 		pthread_mutex_unlock(((philos->ph_arr) + i)->last_m);
@@ -51,6 +54,8 @@ int		launch(t_philos *philos)
 	if (!t)
 		return (1);
 	i = 0;
+	philos->data.start = timestamp();
+	// printf("%llu\n", philos->data.start);
 	while (i < philos->ph_num)
 	{
 		if(pthread_create((t + i), NULL, philosopher, (philos->ph_arr + i)))
@@ -62,6 +67,7 @@ int		launch(t_philos *philos)
 			}
 		}
 		(philos->ph_arr + i)->last_meal = timestamp();
+		// printf("%lld\n", (philos->ph_arr + i)->last_meal);
 		i++;
 	}
 	while (!is_died(philos));
