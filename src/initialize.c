@@ -52,7 +52,6 @@ void	mutex_delete(pthread_mutex_t *mutex, int nb)
 		pthread_mutex_destroy(mutex + nb);
 		nb--;
 	}
-	// free(mutex + nb); // check
 }
 
 int mutex_init(pthread_mutex_t **type, int nb)
@@ -77,35 +76,6 @@ int mutex_init(pthread_mutex_t **type, int nb)
 	*type = mutex;
 	return (0);
 }
-
-// void	forks_delete(pthread_mutex_t *forks, int nb)
-// {
-// 	while (nb > -1)
-// 	{
-// 		pthread_mutex_destroy(forks + nb);
-// 		nb--;
-// 	}
-// 	free(forks + nb); // check
-// }
-
-// int	forks_init(t_philos *philos)
-// {
-// 	int	i;
-// 	i = 0;
-// 	philos->forks = malloc(sizeof(pthread_mutex_t) * philos->ph_num);
-// 	if (!philos->forks)
-// 		return (1);	
-// 	while (i < philos->ph_num)
-// 	{
-// 		if (pthread_mutex_init(philos->forks + i, NULL))
-// 		{
-// 			forks_delete(philos->forks, i - 1);
-// 			return (2);
-// 		}
-// 		i++;
-// 	}
-// 	return (0);
-// }
 
 void	all_mutex_delete(t_philos *philos, int mode)
 {

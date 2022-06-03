@@ -5,33 +5,19 @@
 int	is_died(t_philos *philos)
 {
 	int	i;
-	// struct timeval now;
 	long long	now;
 	
 	i = 0;
-	// printf("now: sec %ld, ms %u\n", tv.tv_sec, tv.tv_usec);
 	while (i < philos->ph_num && !(philos->data.is_to_die))
 	{
-		// gettimeofday(&now, NULL);
-		// now.tv_sec *= 1000;
-		// now.tv_usec /= 1000;
-
 		now = timestamp();
-		// delta(philos->ph_arr[i].last, tv);
-		// printf("now: sec %ld, ms %u; delta: %ld %u\n", tv.tv_sec, tv.tv_usec, 
-		// 	tv.tv_sec - philos->ph_arr[i].last.tv_sec, tv.tv_usec - philos->ph_arr[i].last.tv_usec);
 		pthread_mutex_lock(((philos->ph_arr) + i)->last_m);
-		if (timedif(philos->ph_arr[i].last_meal, now) >= philos->data.is_to_die) // tv.tv_sec - philos->ph_arr[i].last.tv_sec * 1000 + 
+		if (timedif(philos->ph_arr[i].last_meal, now) >= philos->data.is_to_die)
 		{
 			pthread_mutex_unlock(((philos->ph_arr) + i)->last_m);
-			
 			print_action(philos->ph_arr + i, "died");
 			philos->data.is_to_die = 1;
-			// pthread_mutex_lock(philos->ph_arr->out);
-			// printf("%llu ", timedif(philos->ph_arr->start, timestamp()));
-			// printf("%d ", philos->ph_arr[i].index);
-			// printf("died\n");
-			// pthread_mutex_unlock(philos->ph_arr->out);
+
 			return (1);
 		}
 		pthread_mutex_unlock(((philos->ph_arr) + i)->last_m);

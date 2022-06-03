@@ -27,7 +27,7 @@ void	print_action(t_philo *philo, char *msg)
 		printf("%d ", philo->index);
 		printf("%s\n", msg);
 	}
-	pthread_mutex_unlock(philo->data->out_m);
 	// unlock the writing mutex
+	pthread_mutex_unlock(philo->data->out_m);
 	return ;
 }

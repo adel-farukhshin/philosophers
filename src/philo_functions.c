@@ -35,31 +35,12 @@ void		smart_sleep(long long time, t_philo *philo)
 
 void	ph_sleep(t_philo *philo)
 {
-	// struct timeval tv;
-
-	// gettimeofday(&tv, NULL);
-	// tv.tv_sec *= 1000;
-	// tv.tv_usec /= 1000;
-	// pthread_mutex_lock(philo->out);
-	// printf("%lu %d is sleeping\n", tv.tv_sec + tv.tv_usec - 
-	// 	philo->start.tv_sec - philo->start.tv_usec, philo->index);
-	// pthread_mutex_unlock(philo->out);
-	// usleep(philo->to_sleep * 1000);
 	print_action(philo, "is sleeping");
 	smart_sleep(philo->data->to_sleep * 1000, philo);
 }
 
 void	ph_think(t_philo *philo)
 {
-	// struct timeval tv;
-
-	// gettimeofday(&tv, NULL);
-	// tv.tv_sec *= 1000;
-	// tv.tv_usec /= 1000;
-	// pthread_mutex_lock(philo->out);
-	// printf("%lu %d is thinking\n", tv.tv_sec + tv.tv_usec - 
-	// 	philo->start.tv_sec - philo->start.tv_usec, philo->index);	
-	// pthread_mutex_unlock(philo->out);
 	print_action(philo, "is thinking");
 }
 
@@ -86,25 +67,11 @@ int	left(int n, int ph_num)
 
 void	ph_eat(t_philo *philo)
 {
-	// struct timeval tv;
-
-	// gettimeofday(&tv, NULL);
-	// tv.tv_sec *= 1000;
-	// tv.tv_usec = tv.tv_usec / 1000;
-
 	pthread_mutex_lock(philo->last_m);
-	// philo->last.tv_sec = tv.tv_sec;
-	// philo->last.tv_usec = tv.tv_usec;
 	philo->last_meal = timestamp();
 	pthread_mutex_unlock(philo->last_m);
 	print_action(philo, "is eating");
-	// pthread_mutex_lock(philo->out);
-	// printf("%lu %d is eating\n", tv.tv_sec + tv.tv_usec - 
-	// 	philo->start.tv_sec - philo->start.tv_usec, philo->index);
-	// pthread_mutex_unlock(philo->out);
-	// usleep(philo->to_eat * 1000);
 	smart_sleep(philo->data->to_eat * 1000, philo);
-	
 
 }
 
@@ -112,13 +79,6 @@ void	ph_eat(t_philo *philo)
 void	*philosopher(void *data)
 {
 	t_philo *philo = data;
-	// printf("Philo %d, time: %ld,%u, to_die: %d, to_eat: %d, to_sleep: %d; right %d, left %d; forks: right - %p, left - %p\n", 
-		// philo->index, philo->start.tv_sec, philo->start.tv_usec, philo->to_die, philo->to_eat, philo->to_sleep, 
-		// right(philo->index, NB_OF_PHILO), left(philo->index, NB_OF_PHILO), philo->fork_r, philo->fork_l);
-
-	// int	i;
-
-	// struct timeval tv;
 
 	// if (philo->index % 2 == 0)
 	// 	usleep(2500);
@@ -128,54 +88,22 @@ void	*philosopher(void *data)
 	{ 
 		// Take the first fork 
 		pthread_mutex_lock(MIN(philo->fork_r, philo->fork_l));
-		// gettimeofday(&tv, NULL);
-		// tv.tv_sec *= 1000;
-		// tv.tv_usec /= 1000;
-		// pthread_mutex_lock(philo->out);
-		// printf("%lu %d has taken a fork\n", tv.tv_sec + tv.tv_usec - 
-		// 	philo->start.tv_sec - philo->start.tv_usec, philo->index);
-		// pthread_mutex_unlock(philo->out);
 		print_action(philo, "has taken a fork");
 
-		// if (*(philo->is_to_die))
-		// {
-		// 	pthread_mutex_unlock(MIN(philo->fork_r, philo->fork_l));
-		// 	return 0;
-		// }
 		// Take the second fork 
 		pthread_mutex_lock(MAX(philo->fork_r, philo->fork_l));
-		// gettimeofday(&tv, NULL);
-		// tv.tv_sec *= 1000;
-		// tv.tv_usec /= 1000;
-		// pthread_mutex_lock(philo->out);
-		// printf("%lu %d has taken a fork\n", tv.tv_sec + tv.tv_usec - 
-		// 	philo->start.tv_sec - philo->start.tv_usec, philo->index);
-		// pthread_mutex_unlock(philo->out);
 		print_action(philo, "has taken a fork");
 
-		// if (*(philo->is_to_die))
-		// 	return 0;
 		// Eating
 		ph_eat(philo);
-
-
 		pthread_mutex_unlock(MAX(philo->fork_r, philo->fork_l));
 		pthread_mutex_unlock(MIN(philo->fork_r, philo->fork_l));
-		
-		// usleep(philo->to_sleep * 1000);
-		
-		// if (*(philo->is_to_die))
-		// 	return 0;
+
 		// Sleep
 		ph_sleep(philo);
-		// if (*(philo->is_to_die))
-		// 	return 0;
-		
-		// if (*(philo->is_to_die))
-		// 	return 0;
+
 		// Think
 		ph_think(philo);
-		// i++;
 	}
 	return (0);
 }
