@@ -96,7 +96,7 @@ int		initialize(t_philos *philos)
 	philos->data.to_die = TIME_TO_DIE;
 	philos->data.to_sleep = TIME_TO_SLEEP;
 	philos->times_to_eat = T_TO_EAT;
-	philos->data.start = timestamp(); // need to change?
+	// philos->data.start = timestamp(); // need to change?
 	philos->data.is_to_die = 0;
 
 	if (mutex_init(&(philos->forks), philos->ph_num))
