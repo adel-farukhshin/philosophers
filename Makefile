@@ -5,7 +5,8 @@ SRC =	philosophers.c philo_functions.c util_functions.c initialize.c launch.c
 
 OBJ = $(addprefix $(OBJDIR),$(SRC:.c=.o))
 
-CFLAGS = -Wall -Wextra -Werror -pthread
+CFLAGS = -Wall -Wextra -Werror 
+EFLAGS = -fsanitize=thread
 
 D_FILES = ${patsubst %.c,%.d,${SRC}}
 
@@ -15,18 +16,18 @@ LIB = "ftprintf"
 SRCDIR = ./src/
 OBJDIR = ./obj/
 INCDIR = ./inc/
-#BONUSDIR = ./bonus/
+#BONUSDIR = ./bonus/q
 
 HEADER = philosophers.h
 
 ${OBJDIR}%.o : ${SRCDIR}%.c
-	cc ${CFLAGS} -c $< -I${INCDIR} -o $@ -MMD
+	gcc ${CFLAGS} -c $< -I${INCDIR} -o $@ -MMD
 
 
 all : ${NAME}
 
 ${NAME} : obj ${OBJ} 
-	${CC} ${LDFLAGS} -fsanitize=thread ${OBJ} -o $@ 
+	${CC} ${CFLAGS} -lpthread ${OBJ} -o $@ 
 
 obj:
 	mkdir -p $(OBJDIR)
