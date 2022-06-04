@@ -78,6 +78,8 @@ void	ph_eat(t_philo *philo)
 	philo->last_meal = timestamp();
 	pthread_mutex_unlock(philo->last_m);
 	// print_action(philo, "a l_m");
+	philo->nb_meal += 1;
+	// printf("%d\n", philo->nb_meal);
 	smart_sleep(philo->data->to_eat, philo);
 	// print_action(philo, "a ss");
 }
@@ -97,7 +99,7 @@ void	*philosopher(void *data)
 	}
 
 	// i = 0;
-	while (!(philo->data->is_to_die))
+	while (!(philo->data->is_to_die) && !(philo->data->is_all_ate))
 	{ 
 		// Take the first fork 
 		pthread_mutex_lock(MIN(philo->fork_r, philo->fork_l));

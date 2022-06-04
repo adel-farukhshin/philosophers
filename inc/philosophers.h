@@ -24,11 +24,13 @@ typedef struct s_data {
 	pthread_mutex_t *		out_m;
 	// pthread_mutex_t *		last_m;
 	int						ph_num;
+	int						is_all_ate;
 	int						is_to_die;
 }	t_data;
 
 typedef struct s_philo {
 	long long				last_meal; // last meal
+	int						nb_meal;
 	// long long				start;
 	// int						to_die;
 	// int						to_eat;
@@ -52,11 +54,11 @@ typedef struct s_philos {
 	// int		is_to_die;
 }	t_philos;
 
-#define TIME_TO_DIE 310
+#define TIME_TO_DIE 410
 #define TIME_TO_SLEEP 100
 #define	TIME_TO_EAT 200
-#define NB_OF_PHILO 1
-#define T_TO_EAT -1
+#define NB_OF_PHILO 2
+#define T_TO_EAT 1
 
 int			initialize(t_philos *philos);
 void		all_mutex_delete(t_philos *philos, int mode);

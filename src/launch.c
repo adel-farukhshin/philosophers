@@ -1,8 +1,29 @@
 
 #include "philosophers.h"
 #include <stdlib.h>
-// #include <stdio.h>
+#include <stdio.h>
 #include <unistd.h>
+
+int	is_all_ate(t_philos *philos)
+{
+	int	i;
+	int	nb;
+
+	i = 0;
+	nb = 0;
+	while (philos->times_to_eat != -1 && i < philos->ph_num)
+	{
+		if (((philos->ph_arr) + i)->nb_meal >= philos->times_to_eat)
+			nb++;
+		i++;
+	}
+	if (nb == philos->ph_num)
+	{
+		philos->data.is_all_ate = 1;
+		return (1);
+	}
+	return (0);
+}
 
 int	is_died(t_philos *philos)
 {
@@ -10,7 +31,7 @@ int	is_died(t_philos *philos)
 	// long long	now;
 	
 	i = 0;
-	while (i < philos->ph_num && !(philos->data.is_to_die))
+	while (i < philos->ph_num && !(philos->data.is_to_die) && !(philos->data.is_all_ate))
 	{
 		// now = timestamp();
 		pthread_mutex_lock(((philos->ph_arr) + i)->last_m); // one last_m
@@ -27,6 +48,8 @@ int	is_died(t_philos *philos)
 		// if (philos->data.is_to_die)
 		// 	break ;
 		pthread_mutex_unlock(((philos->ph_arr) + i)->last_m);
+		if (is_all_ate(philos))
+			return (2);
 		i++;
 	}
 	return (0);
