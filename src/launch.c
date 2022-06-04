@@ -7,22 +7,25 @@
 int	is_died(t_philos *philos)
 {
 	int	i;
-	long long	now;
+	// long long	now;
 	
 	i = 0;
 	while (i < philos->ph_num && !(philos->data.is_to_die))
 	{
-		now = timestamp();
-		pthread_mutex_lock(((philos->ph_arr) + i)->last_m);
-		if (timedif(philos->ph_arr[i].last_meal, now) >= philos->data.to_die)
+		// now = timestamp();
+		pthread_mutex_lock(((philos->ph_arr) + i)->last_m); // one last_m
+		if (timedif(philos->ph_arr[i].last_meal, timestamp()) >= philos->data.to_die)
 		{
 			// printf("last %llu, now %llu, %d\n", philos->ph_arr[i].last_meal, now, philos->data.is_to_die);
 			pthread_mutex_unlock(((philos->ph_arr) + i)->last_m);
 			print_action(philos->ph_arr + i, "died");
 			philos->data.is_to_die = 1;
-			// usleep(100);
-			return (1);
+			// usleep(100); // not commented
+			return (1); // break
+			// break ;
 		}
+		// if (philos->data.is_to_die)
+		// 	break ;
 		pthread_mutex_unlock(((philos->ph_arr) + i)->last_m);
 		i++;
 	}
