@@ -90,6 +90,12 @@ void	*philosopher(void *data)
 	if (philo->index % 2 == 0)
 		usleep(2500);
 
+	if (philo->data->ph_num == 1)
+	{
+		smart_sleep(philo->data->to_die, philo);
+		philo->data->is_to_die = 1;
+	}
+
 	// i = 0;
 	while (!(philo->data->is_to_die))
 	{ 

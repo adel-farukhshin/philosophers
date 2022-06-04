@@ -92,6 +92,7 @@ int		initialize(t_philos *philos)
 // [number_of_times_each_philosopher_must_eat]
 {
 	philos->ph_num = NB_OF_PHILO;
+	philos->data.ph_num = NB_OF_PHILO;
 	philos->data.to_eat = TIME_TO_EAT;
 	philos->data.to_die = TIME_TO_DIE;
 	philos->data.to_sleep = TIME_TO_SLEEP;

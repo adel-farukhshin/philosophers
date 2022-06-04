@@ -23,6 +23,7 @@ typedef struct s_data {
 	int						to_sleep;
 	pthread_mutex_t *		out_m;
 	// pthread_mutex_t *		last_m;
+	int						ph_num;
 	int						is_to_die;
 }	t_data;
 
@@ -51,10 +52,10 @@ typedef struct s_philos {
 	// int		is_to_die;
 }	t_philos;
 
-#define TIME_TO_DIE 4
-#define TIME_TO_SLEEP 1
-#define	TIME_TO_EAT 1
-#define NB_OF_PHILO 5
+#define TIME_TO_DIE 310
+#define TIME_TO_SLEEP 100
+#define	TIME_TO_EAT 200
+#define NB_OF_PHILO 1
 #define T_TO_EAT -1
 
 int			initialize(t_philos *philos);
