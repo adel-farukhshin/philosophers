@@ -18,18 +18,43 @@
 
 #include "philosophers.h"
 
+int	check_args(int argc, char **argv)
+{
+	int	i;
 
-int	main()
+	i = 1;
+	if (argc != 5 && argc != 6)
+	{
+		printf("The number of arguments is incorrect\n");
+		return (1);
+	}
+	while (i < argc)
+	{
+		if (ft_atoi(argv[i]) == -1)
+		{
+			printf("The argument _%s_ is incorrect\n", argv[i]);
+			return (2);
+		}
+		i++;
+	}
+	return (0);
+}
+
+
+int	main (int argc, char **argv)
 {
 	t_philos philos;
 	// int	i = 0;
 
 	// Initialize
-	if (initialize(&philos))
+	if(check_args(argc, argv))
 		return (1);
 
-	if (launch(&philos))
+	if (initialize(&philos))
 		return (2);
+
+	if (launch(&philos))
+		return (3);
 
 	// End program	
 	all_mutex_delete(&philos, 3);

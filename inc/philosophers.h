@@ -63,6 +63,8 @@ typedef struct s_philos {
 int			initialize(t_philos *philos);
 void		all_mutex_delete(t_philos *philos, int mode);
 
+int			ft_atoi(const char *str);
+
 int			launch(t_philos *philos);
 void		*philosopher(void *data);
 long long	timestamp(void);
