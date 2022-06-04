@@ -60,7 +60,7 @@ typedef struct s_philos {
 #define NB_OF_PHILO 2
 #define T_TO_EAT 1
 
-int			initialize(t_philos *philos);
+int			initialize(t_philos *philos, int ac, char **av);
 void		all_mutex_delete(t_philos *philos, int mode);
 
 int			ft_atoi(const char *str);

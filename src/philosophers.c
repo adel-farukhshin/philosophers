@@ -50,7 +50,7 @@ int	main (int argc, char **argv)
 	if(check_args(argc, argv))
 		return (1);
 
-	if (initialize(&philos))
+	if (initialize(&philos, argc, argv))
 		return (2);
 
 	if (launch(&philos))

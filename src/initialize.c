@@ -88,16 +88,19 @@ void	all_mutex_delete(t_philos *philos, int mode)
 		mutex_delete(philos->data.out_m, 1 - 1);
 }
 
-int		initialize(t_philos *philos)
+int		initialize(t_philos *philos, int ac, char **av)
 // number_of_philosophers time_to_die time_to_eat time_to_sleep
 // [number_of_times_each_philosopher_must_eat]
 {
-	philos->ph_num = NB_OF_PHILO;
-	philos->data.ph_num = NB_OF_PHILO;
-	philos->data.to_eat = TIME_TO_EAT;
-	philos->data.to_die = TIME_TO_DIE;
-	philos->data.to_sleep = TIME_TO_SLEEP;
-	philos->times_to_eat = T_TO_EAT;
+	philos->ph_num = ft_atoi(av[1]);
+	philos->data.ph_num = ft_atoi(av[1]);
+	philos->data.to_die = ft_atoi(av[2]);
+	philos->data.to_eat = ft_atoi(av[3]);
+	philos->data.to_sleep = ft_atoi(av[4]);
+	if (ac == 6)
+		philos->times_to_eat = ft_atoi(av[5]);
+	else
+		philos->times_to_eat = -1;
 	// philos->data.start = timestamp(); // need to change?
 	philos->data.is_all_ate = 0;
 	philos->data.is_to_die = 0;
