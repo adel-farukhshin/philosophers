@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   mutex.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: bsarai <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/06/05 12:58:26 by bsarai            #+#    #+#             */
+/*   Updated: 2022/06/05 12:58:27 by bsarai           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "philosophers.h"
 #include <stdlib.h>
@@ -11,16 +22,15 @@ void	mutex_delete(pthread_mutex_t *mutex, int nb)
 	}
 }
 
-int mutex_init(pthread_mutex_t **type, int nb)
+int	mutex_init(pthread_mutex_t **type, int nb)
 {
-	int	i;
-	pthread_mutex_t *mutex;
+	int				i;
+	pthread_mutex_t	*mutex;
 
 	i = 0;
-
 	mutex = malloc(sizeof(pthread_mutex_t) * nb);
 	if (!mutex)
-		return (1);	
+		return (1);
 	while (i < nb)
 	{
 		if (pthread_mutex_init(mutex + i, NULL))
