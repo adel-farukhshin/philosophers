@@ -117,3 +117,16 @@ int	launch(t_philos *philos)
 	free(t);
 	return (error);
 }
+
+int	launch(t_philos *philos)
+{
+	pid_t	*pids;
+
+	pids = malloc(sizeof(pid_t) * philos->ph_num);
+	if (!pids)
+		return (1);
+	
+
+	
+	return (0);
+}
