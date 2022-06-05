@@ -17,7 +17,20 @@
 #define MIN(a,b) (((a)<(b))?(a):(b))
 #define MAX(a,b) (((a)>(b))?(a):(b))
 
-
+pthread_mutex_t *min(pthread_mutex_t *r, pthread_mutex_t *l)
+{
+	if (r < l)
+		return (r);
+	else
+		return (l);
+}
+pthread_mutex_t *max(pthread_mutex_t *r, pthread_mutex_t *l)
+{
+	if (r > l)
+		return (r);
+	else
+		return (l);
+}
 
 void		smart_sleep(long long time, t_philo *philo)
 {
@@ -25,50 +38,19 @@ void		smart_sleep(long long time, t_philo *philo)
 	long long a;
 	
 	i = timestamp();
-	// print_action(philo, "a ts");
 	while (!(philo->data->is_to_die))
 	{
 		a = timestamp();
 		if (a - i >= time)
 			break ;
 		usleep(50);
-		// print_action(philo, "ss: cycle");
-		// printf("n %llu st %llu min %llu t %llu\n", a, i, a - i, time);
 	}
-	// print_action(philo, "ss: at the end ");
 }
-
 
 void	ph_sleep(t_philo *philo)
 {
 	print_action(philo, "is sleeping");
 	smart_sleep(philo->data->to_sleep, philo);
-}
-
-void	ph_think(t_philo *philo)
-{
-	print_action(philo, "is thinking");
-}
-
-
-int right(int n, int ph_num)
-{
-	int	res;
-
-	res = (n - 1) % ph_num;
-	if (res == 0)
-		res = ph_num;
-	return (res);
-}
-
-int	left(int n, int ph_num)
-{
-	int	res;
-
-	res = (n + 1) % ph_num;
-	if (res == 0)
-		res = ph_num;
-	return (res);
 }
 
 void	ph_eat(t_philo *philo)
@@ -77,13 +59,9 @@ void	ph_eat(t_philo *philo)
 	print_action(philo, "is eating");
 	philo->last_meal = timestamp();
 	pthread_mutex_unlock(philo->last_m);
-	// print_action(philo, "a l_m");
 	philo->nb_meal += 1;
-	// printf("%d\n", philo->nb_meal);
 	smart_sleep(philo->data->to_eat, philo);
-	// print_action(philo, "a ss");
 }
-
 
 void	*philosopher(void *data)
 {
@@ -91,41 +69,23 @@ void	*philosopher(void *data)
 
 	if (philo->index % 2 == 0)
 		usleep(2500);
-
 	if (philo->data->ph_num == 1)
 	{
 		smart_sleep(philo->data->to_die, philo);
 		philo->data->is_to_die = 1;
 	}
-
-	// i = 0;
 	while (!(philo->data->is_to_die) && !(philo->data->is_all_ate))
 	{ 
-		// Take the first fork 
-		pthread_mutex_lock(MIN(philo->fork_r, philo->fork_l));
+		pthread_mutex_lock(min(philo->fork_r, philo->fork_l));
 		print_action(philo, "has taken a fork");
-
-		// Take the second fork 
-		pthread_mutex_lock(MAX(philo->fork_r, philo->fork_l));
+		pthread_mutex_lock(max(philo->fork_r, philo->fork_l));
 		print_action(philo, "has taken a fork");
-
-		// print_action(philo, "aaaa");
-		// Eating
 		ph_eat(philo);
-		// print_action(philo, "ab");
-		pthread_mutex_unlock(MAX(philo->fork_r, philo->fork_l)); 
-		// print_action(philo, "ac");
-		pthread_mutex_unlock(MIN(philo->fork_r, philo->fork_l));
-		
-		// print_action(philo, "bbb");
-
-		// Sleep
+		pthread_mutex_unlock(max(philo->fork_r, philo->fork_l)); 
+		pthread_mutex_unlock(min(philo->fork_r, philo->fork_l));
 		ph_sleep(philo);
-
-		// print_action(philo, "cc");
-		// Think
-		ph_think(philo);
-		// print_action(philo, "ddd");
+		print_action(philo, "is thinking");
+		// ph_think(philo);
 	}
 	return (0);
 }
