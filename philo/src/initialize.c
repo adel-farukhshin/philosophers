@@ -12,15 +12,6 @@
 
 #include "philosophers.h"
 #include <stdlib.h>
-#include <unistd.h>
-
-// long long	timestamp(void)
-// {
-// 	struct timeval tv;
-
-// 	gettimeofday(&tv, NULL);
-// 	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
-// }
 
 int	init_philos(t_philos *philos)
 {
@@ -88,6 +79,23 @@ void	all_mutex_delete(t_philos *philos, int mode)
 		mutex_delete(philos->data.out_m, 1 - 1);
 }
 
+int	all_mutex_init(t_philos *philos)
+{
+	if (mutex_init(&(philos->forks), philos->ph_num))
+		return (1);
+	if (mutex_init(&(philos->last_mutexes), philos->ph_num))
+	{
+		all_mutex_delete(philos, 1);
+		return (2);
+	}
+	if (mutex_init(&(philos->data.out_m), 1))
+	{
+		all_mutex_delete(philos, 2);
+		return (3);
+	}
+	return (0);
+}
+
 int		initialize(t_philos *philos, int ac, char **av)
 // number_of_philosophers time_to_die time_to_eat time_to_sleep
 // [number_of_times_each_philosopher_must_eat]
@@ -101,28 +109,14 @@ int		initialize(t_philos *philos, int ac, char **av)
 		philos->times_to_eat = ft_atoi(av[5]);
 	else
 		philos->times_to_eat = -1;
-	// philos->data.start = timestamp(); // need to change?
 	philos->data.is_all_ate = 0;
 	philos->data.is_to_die = 0;
 
-	if (mutex_init(&(philos->forks), philos->ph_num))
+	if (all_mutex_init(philos))
 		return (1);
-	if (mutex_init(&(philos->last_mutexes), philos->ph_num))
-	{
-		mutex_delete(philos->forks, philos->ph_num - 1);
-		return (2);
-	}
-	if (mutex_init(&(philos->data.out_m), 1))
-	{
-		mutex_delete(philos->forks, philos->ph_num - 1);
-		mutex_delete(philos->last_mutexes, philos->ph_num - 1);
-		return (3);
-	}
 	if (init_philos(philos))
 	{
-		mutex_delete(philos->forks, philos->ph_num - 1);
-		mutex_delete(philos->last_mutexes, philos->ph_num - 1);
-		mutex_delete(philos->data.out_m, 1 - 1);
+		all_mutex_delete(philos, 3);
 		return (4);
 	}
 	return (0);
