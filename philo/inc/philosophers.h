@@ -47,6 +47,7 @@ typedef struct s_philos {
 }	t_philos;
 
 int			initialize(t_philos *philos, int ac, char **av);
+int			all_mutex_init(t_philos *philos);
 void		all_mutex_delete(t_philos *philos, int mode);
 
 int			ft_atoi(const char *str);
