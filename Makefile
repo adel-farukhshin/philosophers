@@ -1,5 +1,5 @@
 
-NAME = philosophers
+NAME = philo
 
 SRC =	philosophers.c philo_functions.c util_functions.c initialize.c launch.c
 
