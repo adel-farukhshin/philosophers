@@ -14,9 +14,6 @@
 #include <stdio.h>
 #include <unistd.h>
 
-#define MIN(a,b) (((a)<(b))?(a):(b))
-#define MAX(a,b) (((a)>(b))?(a):(b))
-
 pthread_mutex_t *min(pthread_mutex_t *r, pthread_mutex_t *l)
 {
 	if (r < l)
@@ -47,11 +44,11 @@ void		smart_sleep(long long time, t_philo *philo)
 	}
 }
 
-void	ph_sleep(t_philo *philo)
-{
-	print_action(philo, "is sleeping");
-	smart_sleep(philo->data->to_sleep, philo);
-}
+// void	ph_sleep(t_philo *philo)
+// {
+// 	print_action(philo, "is sleeping");
+// 	smart_sleep(philo->data->to_sleep, philo);
+// }
 
 void	ph_eat(t_philo *philo)
 {
@@ -83,7 +80,9 @@ void	*philosopher(void *data)
 		ph_eat(philo);
 		pthread_mutex_unlock(max(philo->fork_r, philo->fork_l)); 
 		pthread_mutex_unlock(min(philo->fork_r, philo->fork_l));
-		ph_sleep(philo);
+		// ph_sleep(philo);
+		print_action(philo, "is sleeping");
+		smart_sleep(philo->data->to_sleep, philo);
 		print_action(philo, "is thinking");
 		// ph_think(philo);
 	}
