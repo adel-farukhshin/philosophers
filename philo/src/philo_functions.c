@@ -61,7 +61,7 @@ void	*philosopher(void *data)
 
 	philo = data;
 	if (philo->index % 2 == 0)
-		usleep(2500);
+		usleep(20);
 	if (philo->data->ph_num == 1)
 	{
 		smart_sleep(philo->data->to_die, philo);
