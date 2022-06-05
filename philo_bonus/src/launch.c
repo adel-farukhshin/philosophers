@@ -14,6 +14,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <signal.h>
+#include <sys/wait.h>
+#include <sys/types.h>
+
 
 int	is_all_ate(t_philos *philos)
 {
@@ -75,47 +79,56 @@ int	thread_delete(pthread_t *t, int nb)
 	return (error);
 }
 
-int	thread_create(t_philos *philos, pthread_t	*t)
+// int	thread_create(t_philos *philos, pthread_t	*t)
+// {
+// 	int	i;
+
+// 	i = 0;
+// 	while (i < philos->ph_num)
+// 	{
+// 		if (pthread_create((t + i)
+// 				, NULL, philosopher, (philos->ph_arr + i)))
+// 		{
+// 			if (thread_delete(t, i - 1))
+// 				return (1);
+// 		}
+// 		(philos->ph_arr + i)->last_meal = timestamp();
+// 		i++;
+// 	}
+// 	return (0);
+// }
+
+// int	launch(t_philos *philos)
+// {	
+// 	pthread_t	*t;
+// 	int			i;
+// 	int			error;
+
+// 	t = malloc(sizeof(pthread_t) * philos->ph_num);
+// 	if (!t)
+// 		return (1);
+// 	i = 0;
+// 	philos->data.start = timestamp();
+// 	if (thread_create(philos, t))
+// 	{
+// 		free (t);
+// 		return (2);
+// 	}
+// 	while (1)
+// 		if (is_died(philos))
+// 			break ;
+// 	error = thread_delete(t, philos->ph_num - 1);
+// 	free(t);
+// 	return (error);
+// }
+
+void	kill_processes(pid_t *pids, int nb)
 {
-	int	i;
-
-	i = 0;
-	while (i < philos->ph_num)
+	while (nb >= -1)
 	{
-		if (pthread_create((t + i)
-				, NULL, philosopher, (philos->ph_arr + i)))
-		{
-			if (thread_delete(t, i - 1))
-				return (1);
-		}
-		(philos->ph_arr + i)->last_meal = timestamp();
-		i++;
+		kill(pids[nb], SIGKILL);
+		nb--;
 	}
-	return (0);
-}
-
-int	launch(t_philos *philos)
-{	
-	pthread_t	*t;
-	int			i;
-	int			error;
-
-	t = malloc(sizeof(pthread_t) * philos->ph_num);
-	if (!t)
-		return (1);
-	i = 0;
-	philos->data.start = timestamp();
-	if (thread_create(philos, t))
-	{
-		free (t);
-		return (2);
-	}
-	while (1)
-		if (is_died(philos))
-			break ;
-	error = thread_delete(t, philos->ph_num - 1);
-	free(t);
-	return (error);
 }
 
 int	launch(t_philos *philos)
@@ -125,8 +138,31 @@ int	launch(t_philos *philos)
 	pids = malloc(sizeof(pid_t) * philos->ph_num);
 	if (!pids)
 		return (1);
-	
-
-	
+	philos->data.start = timestamp();
+	int	i = 1;
+	while (i < philos->ph_num)
+	{
+		pids[i - 1] = fork();
+		// printf("pid %d\n", pids[i]);
+		if (pids[i - 1] == -1)
+			kill_processes(pids, i - 1);
+		if (pids[i - 1] == 0)
+		{
+			philos->ph_arr[0].last_meal = timestamp();
+			if (philosopher(philos->ph_arr + 0))
+			{
+				return(1);
+			}
+		}
+		i++;
+	}
+	int	signal;
+		while (waitpid(-1, &signal, 0) > 0) // or > 0
+		{
+			if (WEXITSTATUS(signal) == 1)
+				kill_processes(pids, philos->ph_num - 1);
+		}
+		
+	free(pids);
 	return (0);
 }

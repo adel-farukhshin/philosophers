@@ -55,30 +55,37 @@ void	ph_eat(t_philo *philo)
 	smart_sleep(philo->data->to_eat, philo);
 }
 
-void	*philosopher(void *data)
-{
-	t_philo	*philo;
+// void	*philosopher(void *data)
+// {
+// 	t_philo	*philo;
 
-	philo = data;
-	if (philo->index % 2 == 0)
-		usleep(20);
-	if (philo->data->ph_num == 1)
-	{
-		smart_sleep(philo->data->to_die, philo);
-		philo->data->is_to_die = 1;
-	}
-	while (!(philo->data->is_to_die) && !(philo->data->is_all_ate))
-	{
-		pthread_mutex_lock(min(philo->fork_r, philo->fork_l));
-		print_action(philo, "has taken a fork");
-		pthread_mutex_lock(max(philo->fork_r, philo->fork_l));
-		print_action(philo, "has taken a fork");
-		ph_eat(philo);
-		pthread_mutex_unlock(max(philo->fork_r, philo->fork_l));
-		pthread_mutex_unlock(min(philo->fork_r, philo->fork_l));
-		print_action(philo, "is sleeping");
-		smart_sleep(philo->data->to_sleep, philo);
-		print_action(philo, "is thinking");
-	}
-	return (0);
+// 	philo = data;
+// 	if (philo->index % 2 == 0)
+// 		usleep(20);
+// 	if (philo->data->ph_num == 1)
+// 	{
+// 		smart_sleep(philo->data->to_die, philo);
+// 		philo->data->is_to_die = 1;
+// 	}
+// 	while (!(philo->data->is_to_die) && !(philo->data->is_all_ate))
+// 	{
+// 		pthread_mutex_lock(min(philo->fork_r, philo->fork_l));
+// 		print_action(philo, "has taken a fork");
+// 		pthread_mutex_lock(max(philo->fork_r, philo->fork_l));
+// 		print_action(philo, "has taken a fork");
+// 		ph_eat(philo);
+// 		pthread_mutex_unlock(max(philo->fork_r, philo->fork_l));
+// 		pthread_mutex_unlock(min(philo->fork_r, philo->fork_l));
+// 		print_action(philo, "is sleeping");
+// 		smart_sleep(philo->data->to_sleep, philo);
+// 		print_action(philo, "is thinking");
+// 	}
+// 	return (0);
+// }
+
+int	philosopher(t_philo *philo)
+{
+	smart_sleep(philo->data->to_sleep, philo);
+	// printf("%p", philo);
+	return (1);
 }

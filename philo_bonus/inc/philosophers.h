@@ -53,7 +53,7 @@ void		all_mutex_delete(t_philos *philos, int mode);
 int			ft_atoi(const char *str);
 
 int			launch(t_philos *philos);
-void		*philosopher(void *data);
+int			philosopher(t_philo *philo);
 long long	timestamp(void);
 long long	timedif(long long last, long long next);
 void		print_action(t_philo *philo, char *msg);
