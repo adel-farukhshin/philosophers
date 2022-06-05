@@ -14,14 +14,15 @@
 #include <stdio.h>
 #include <unistd.h>
 
-pthread_mutex_t *min(pthread_mutex_t *r, pthread_mutex_t *l)
+pthread_mutex_t	*min(pthread_mutex_t *r, pthread_mutex_t *l)
 {
 	if (r < l)
 		return (r);
 	else
 		return (l);
 }
-pthread_mutex_t *max(pthread_mutex_t *r, pthread_mutex_t *l)
+
+pthread_mutex_t	*max(pthread_mutex_t *r, pthread_mutex_t *l)
 {
 	if (r > l)
 		return (r);
@@ -29,11 +30,11 @@ pthread_mutex_t *max(pthread_mutex_t *r, pthread_mutex_t *l)
 		return (l);
 }
 
-void		smart_sleep(long long time, t_philo *philo)
+void	smart_sleep(long long time, t_philo *philo)
 {
-	long long i;
-	long long a;
-	
+	long long	i;
+	long long	a;
+
 	i = timestamp();
 	while (!(philo->data->is_to_die))
 	{
@@ -43,12 +44,6 @@ void		smart_sleep(long long time, t_philo *philo)
 		usleep(50);
 	}
 }
-
-// void	ph_sleep(t_philo *philo)
-// {
-// 	print_action(philo, "is sleeping");
-// 	smart_sleep(philo->data->to_sleep, philo);
-// }
 
 void	ph_eat(t_philo *philo)
 {
@@ -62,8 +57,9 @@ void	ph_eat(t_philo *philo)
 
 void	*philosopher(void *data)
 {
-	t_philo *philo = data;
+	t_philo	*philo;
 
+	philo = data;
 	if (philo->index % 2 == 0)
 		usleep(2500);
 	if (philo->data->ph_num == 1)
@@ -72,19 +68,17 @@ void	*philosopher(void *data)
 		philo->data->is_to_die = 1;
 	}
 	while (!(philo->data->is_to_die) && !(philo->data->is_all_ate))
-	{ 
+	{
 		pthread_mutex_lock(min(philo->fork_r, philo->fork_l));
 		print_action(philo, "has taken a fork");
 		pthread_mutex_lock(max(philo->fork_r, philo->fork_l));
 		print_action(philo, "has taken a fork");
 		ph_eat(philo);
-		pthread_mutex_unlock(max(philo->fork_r, philo->fork_l)); 
+		pthread_mutex_unlock(max(philo->fork_r, philo->fork_l));
 		pthread_mutex_unlock(min(philo->fork_r, philo->fork_l));
-		// ph_sleep(philo);
 		print_action(philo, "is sleeping");
 		smart_sleep(philo->data->to_sleep, philo);
 		print_action(philo, "is thinking");
-		// ph_think(philo);
 	}
 	return (0);
 }
