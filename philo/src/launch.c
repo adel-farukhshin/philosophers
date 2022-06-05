@@ -97,13 +97,11 @@ int	thread_create(t_philos *philos, pthread_t	*t)
 int	launch(t_philos *philos)
 {	
 	pthread_t	*t;
-	int			i;
 	int			error;
 
 	t = malloc(sizeof(pthread_t) * philos->ph_num);
 	if (!t)
 		return (1);
-	i = 0;
 	philos->data.start = timestamp();
 	if (thread_create(philos, t))
 	{
