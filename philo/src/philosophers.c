@@ -11,11 +11,7 @@
 /* ************************************************************************** */
 
 #include <stdio.h>
-// #include <sys/time.h>
-#include <unistd.h>
-// #include <pthread.h>
 #include <stdlib.h>
-
 #include "philosophers.h"
 
 int	check_args(int argc, char **argv)
@@ -40,23 +36,16 @@ int	check_args(int argc, char **argv)
 	return (0);
 }
 
-
-int	main (int argc, char **argv)
+int	main(int argc, char **argv)
 {
-	t_philos philos;
-	// int	i = 0;
+	t_philos	philos;
 
-	// Initialize
-	if(check_args(argc, argv))
+	if (check_args(argc, argv))
 		return (1);
-
 	if (initialize(&philos, argc, argv))
 		return (2);
-
 	if (launch(&philos))
 		return (3);
-
-	// End program	
 	all_mutex_delete(&philos, 3);
 	free(philos.forks);
 	free(philos.last_mutexes);
