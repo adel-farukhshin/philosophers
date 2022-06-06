@@ -97,7 +97,11 @@ void	*to_stop(void *data)
 	while (1)
 	{
 		// Check times of eating
-
+		// if (philo->nb_meal == philo->times_to_eat)
+		// {
+		// 	philo->is_eaten = 1;
+		// 	break ;
+		// }
 		// Check is died
 		if (timestamp() - philo->last_meal >= philo->to_die)
 		{
