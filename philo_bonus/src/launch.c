@@ -167,7 +167,8 @@ int	launch(t_philos *philos)
 			philos->philo.last_meal = timestamp();
 			philosopher(&(philos->philo));
 		}
-		// usleep(25000);
+		if (i % 2 == 0)
+			usleep(5000);
 		i++;
 	}
 	int	signal;
