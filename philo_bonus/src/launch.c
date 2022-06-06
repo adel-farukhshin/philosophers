@@ -125,13 +125,19 @@ int	thread_delete(pthread_t *t, int nb)
 // 	return (error);
 // }
 
-void	kill_processes(pid_t *pids, int nb)
+int	kill_processes(pid_t *pids, int nb)
 {
+	// int	i;
+
+	// i = 0;
+	// while (i < nb)
 	while (nb >= -1)
 	{
 		kill(pids[nb], SIGKILL);
 		nb--;
+		// i++;
 	}
+	return (0);
 }
 
 int	launch(t_philos *philos)
@@ -154,20 +160,16 @@ int	launch(t_philos *philos)
 			// printf("proc created\n");
 			philos->philo.index = i + 1;
 			philos->philo.last_meal = timestamp();
-			if (philosopher(&(philos->philo)))
-			{
-				return(1);
-			}
-			else
-				return (0);
+			philosopher(&(philos->philo));
 		}
+		// usleep(25000);
 		i++;
 	}
 	int	signal;
 	while (waitpid(-1, &signal, 0) > 0) // or > 0
 	{
 		if (WEXITSTATUS(signal) == 1)
-			kill_processes(pids, philos->ph_num - 1);
+			return (kill_processes(pids, philos->ph_num - 1));
 	}
 		
 	free(pids);
