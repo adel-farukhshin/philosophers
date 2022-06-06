@@ -51,3 +51,9 @@ long long	timedif(long long past, long long pres)
 	return (pres - past);
 }
 
+void	print_action(t_philo *philo, char *msg)
+{
+	sem_wait(philo->out);
+	printf("%llu %d %s\n", timestamp() - philo->start, philo->index, msg);
+	sem_post(philo->out);
+}

@@ -88,12 +88,7 @@ void	ph_eat(t_philo *philo)
 // 	return (0);
 // }
 
-void	print_action(t_philo *philo, char *msg)
-{
-	sem_wait(philo->out);
-	printf("%llu %d %s\n", timestamp() - philo->start, philo->index, msg);
-	sem_post(philo->out);
-}
+
 void	*to_stop(void *data)
 {
 	t_philo	*philo;
