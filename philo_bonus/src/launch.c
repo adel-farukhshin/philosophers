@@ -131,8 +131,9 @@ int	kill_processes(pid_t *pids, int nb)
 
 	// i = 0;
 	// while (i < nb)
-	while (nb >= -1)
+	while (nb > -1)
 	{
+		// printf("%d\n", pids[nb]);
 		kill(pids[nb], SIGKILL);
 		nb--;
 		// i++;
@@ -155,12 +156,13 @@ int	launch(t_philos *philos)
 	while (i < philos->ph_num)
 	{
 		pids[i] = fork();
+		if (pids[i])
+			// printf("proc created %d\n", pids[i]);
 		// printf("pid %d\n", pids[i]);
 		if (pids[i] == -1)
 			kill_processes(pids, i - 1);
 		if (pids[i] == 0)
 		{
-			// printf("proc created\n");
 			philos->philo.index = i + 1;
 			philos->philo.last_meal = timestamp();
 			philosopher(&(philos->philo));
