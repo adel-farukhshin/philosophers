@@ -50,6 +50,21 @@ int	initialize(t_philos *philos, int ac, char **av)
 	philos->philo.nb_meal = 0;
 	philos->philo.is_eaten = 0;
 	philos->philo.is_to_die = 0;
+	
+	
+	sem_unlink("out");
+	sem_unlink("fork");
+	philos->philo.out = sem_open("out", O_CREAT, 0644, 1);
+	if (philos->philo.out == SEM_FAILED)
+		return (1);
+	philos->philo.fork = sem_open("fork", O_CREAT, 0644, philos->ph_num);
+	if (philos->philo.fork == SEM_FAILED)
+	{
+		sem_delete(&(philos->philo), 1);	
+		return (1);
+	}
+
+
 	// if (all_mutex_init(philos))
 	// 	return (1);
 	// if (init_philos(philos))

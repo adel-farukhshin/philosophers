@@ -3,6 +3,19 @@
 #include "philosophers.h"
 #include <stdio.h>
 
+void	sem_delete(t_philo *philo, int mode)
+{
+	if (mode > 0)
+	{
+		sem_close(philo->out);
+		sem_unlink("out");
+	}
+	if (mode > 1)
+	{
+		sem_close(philo->fork);
+		sem_unlink("fork");
+	}
+}
 
 int	ft_atoi(const char *str)
 {

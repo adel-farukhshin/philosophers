@@ -15,6 +15,7 @@
 
 # include <sys/time.h>
 # include <pthread.h>
+# include <semaphore.h>
 
 // typedef struct s_data {
 // 	long long				start;
@@ -42,6 +43,8 @@ typedef struct s_philo {
 	int						is_eaten;
 	int						is_to_die;
 
+	sem_t					*out;
+	sem_t					*fork;
 	// pthread_mutex_t			*fork_r;
 	// pthread_mutex_t			*fork_l;
 	// pthread_mutex_t			*last_m;
@@ -60,6 +63,8 @@ typedef struct s_philos {
 
 
 int			initialize(t_philos *philos, int ac, char **av);
+void		sem_delete(t_philo *philo, int mode);
+
 int			all_mutex_init(t_philos *philos);
 void		all_mutex_delete(t_philos *philos, int mode);
 

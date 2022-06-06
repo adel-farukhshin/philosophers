@@ -46,6 +46,8 @@ int	main(int argc, char **argv)
 		return (2);
 	if (launch(&philos))
 		return (3);
+	
+	sem_delete(&(philos.philo), 2);
 	// all_mutex_delete(&philos, 3);
 	// free(philos.forks);
 	// free(philos.last_mutexes);

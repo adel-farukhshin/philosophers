@@ -146,7 +146,10 @@ int	launch(t_philos *philos)
 
 	pids = malloc(sizeof(pid_t) * philos->ph_num);
 	if (!pids)
+	{
+		sem_delete(&(philos->philo), 2);
 		return (1);
+	}
 	philos->philo.start = timestamp();
 	int	i = 0;
 	while (i < philos->ph_num)
@@ -171,7 +174,7 @@ int	launch(t_philos *philos)
 		if (WEXITSTATUS(signal) == 1)
 			return (kill_processes(pids, philos->ph_num - 1));
 	}
-		
+	
 	free(pids);
 	return (0);
 }
