@@ -102,7 +102,9 @@ void	*to_stop(void *data)
 		if (timestamp() - philo->start >= philo->to_die)
 		{
 			philo->is_to_die = 1;
+			sem_wait(philo->out);
 			printf("%llu %d is_died\n", timestamp() - philo->start, philo->index);
+			sem_post(philo->out);
 			// print is died
 			break ;
 		}
