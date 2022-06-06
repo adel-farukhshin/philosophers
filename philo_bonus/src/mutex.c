@@ -12,7 +12,7 @@
 
 #include "philosophers.h"
 #include <stdlib.h>
-
+/*
 void	mutex_delete(pthread_mutex_t *mutex, int nb)
 {
 	while (nb > -1)
@@ -70,3 +70,4 @@ int	all_mutex_init(t_philos *philos)
 	}
 	return (0);
 }
+*/

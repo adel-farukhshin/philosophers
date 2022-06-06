@@ -18,6 +18,7 @@
 #include <sys/wait.h>
 #include <sys/types.h>
 
+/*
 
 int	is_all_ate(t_philos *philos)
 {
@@ -79,6 +80,8 @@ int	thread_delete(pthread_t *t, int nb)
 	return (error);
 }
 
+*/
+
 // int	thread_create(t_philos *philos, pthread_t	*t)
 // {
 // 	int	i;
@@ -138,7 +141,7 @@ int	launch(t_philos *philos)
 	pids = malloc(sizeof(pid_t) * philos->ph_num);
 	if (!pids)
 		return (1);
-	philos->data.start = timestamp();
+	philos->philo.start = timestamp();
 	int	i = 1;
 	while (i < philos->ph_num)
 	{
@@ -148,8 +151,9 @@ int	launch(t_philos *philos)
 			kill_processes(pids, i - 1);
 		if (pids[i - 1] == 0)
 		{
-			philos->ph_arr[0].last_meal = timestamp();
-			if (philosopher(philos->ph_arr + 0))
+			philos->philo.index = i;
+			philos->philo.last_meal = timestamp();
+			if (philosopher(&(philos->philo)))
 			{
 				return(1);
 			}

@@ -14,6 +14,8 @@
 #include <stdio.h>
 #include <unistd.h>
 
+/*
+
 pthread_mutex_t	*min(pthread_mutex_t *r, pthread_mutex_t *l)
 {
 	if (r < l)
@@ -54,6 +56,8 @@ void	ph_eat(t_philo *philo)
 	philo->nb_meal += 1;
 	smart_sleep(philo->data->to_eat, philo);
 }
+
+*/
 
 // void	*philosopher(void *data)
 // {

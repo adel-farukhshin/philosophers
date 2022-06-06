@@ -13,52 +13,54 @@
 #include "philosophers.h"
 #include <stdlib.h>
 
-int	init_philos(t_philos *philos)
-{
-	int	i;
+// int	init_philos(t_philos *philos)
+// {
+// 	int	i;
 
-	i = 1;
-	philos->ph_arr = malloc(sizeof(t_philo) * philos->ph_num);
-	if (!philos->ph_arr)
-		return (1);
-	while (i <= philos->ph_num)
-	{
-		philos->ph_arr[i - 1].index = i;
-		philos->ph_arr[i - 1].last_m = philos->last_mutexes + i - 1;
-		philos->ph_arr[i - 1].fork_l = philos->forks + i - 1;
-		if (i == 1)
-			philos->ph_arr[i - 1].fork_r = philos->forks + philos->ph_num - 1;
-		else
-			philos->ph_arr[i - 1].fork_r = philos->forks + i - 2;
-		philos->ph_arr[i - 1].nb_meal = 0;
-		philos->ph_arr[i - 1].data = &(philos->data);
-		i++;
-	}
-	return (0);
-}
+// 	i = 1;
+// 	philos->ph_arr = malloc(sizeof(t_philo) * philos->ph_num);
+// 	if (!philos->ph_arr)
+// 		return (1);
+// 	while (i <= philos->ph_num)
+// 	{
+// 		philos->ph_arr[i - 1].index = i;
+// 		philos->ph_arr[i - 1].last_m = philos->last_mutexes + i - 1;
+// 		philos->ph_arr[i - 1].fork_l = philos->forks + i - 1;
+// 		if (i == 1)
+// 			philos->ph_arr[i - 1].fork_r = philos->forks + philos->ph_num - 1;
+// 		else
+// 			philos->ph_arr[i - 1].fork_r = philos->forks + i - 2;
+// 		philos->ph_arr[i - 1].nb_meal = 0;
+// 		philos->ph_arr[i - 1].data = &(philos->data);
+// 		i++;
+// 	}
+// 	return (0);
+// }
 
 int	initialize(t_philos *philos, int ac, char **av)
 {
 	philos->ph_num = ft_atoi(av[1]);
-	philos->data.ph_num = ft_atoi(av[1]);
-	philos->data.to_die = ft_atoi(av[2]);
-	philos->data.to_eat = ft_atoi(av[3]);
-	philos->data.to_sleep = ft_atoi(av[4]);
+	philos->philo.to_die = ft_atoi(av[2]);
+	philos->philo.to_eat = ft_atoi(av[3]);
+	philos->philo.to_sleep = ft_atoi(av[4]);
 	if (ac == 6)
-		philos->times_to_eat = ft_atoi(av[5]);
+		philos->philo.times_to_eat = ft_atoi(av[5]);
 	else
-		philos->times_to_eat = -1;
-	philos->data.is_all_ate = 0;
-	philos->data.is_to_die = 0;
-	if (all_mutex_init(philos))
-		return (1);
-	if (init_philos(philos))
-	{
-		all_mutex_delete(philos, 3);
-		return (4);
-	}
+		philos->philo.times_to_eat = -1;
+	philos->philo.nb_meal = 0;
+	philos->philo.is_eaten = 0;
+	philos->philo.is_to_die = 0;
+	// if (all_mutex_init(philos))
+	// 	return (1);
+	// if (init_philos(philos))
+	// {
+	// 	all_mutex_delete(philos, 3);
+	// 	return (4);
+	// }
 	return (0);
 }
+
+
 
 // #include <stdio.h>
 //

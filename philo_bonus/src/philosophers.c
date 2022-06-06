@@ -46,9 +46,9 @@ int	main(int argc, char **argv)
 		return (2);
 	if (launch(&philos))
 		return (3);
-	all_mutex_delete(&philos, 3);
-	free(philos.forks);
-	free(philos.last_mutexes);
-	free(philos.data.out_m);
-	free(philos.ph_arr);
+	// all_mutex_delete(&philos, 3);
+	// free(philos.forks);
+	// free(philos.last_mutexes);
+	// free(philos.data.out_m);
+	// free(philos.ph_arr);
 }

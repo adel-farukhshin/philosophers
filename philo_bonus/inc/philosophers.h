@@ -16,35 +16,48 @@
 # include <sys/time.h>
 # include <pthread.h>
 
-typedef struct s_data {
+// typedef struct s_data {
+// 	long long				start;
+// 	int						to_die;
+// 	int						to_eat;
+// 	int						to_sleep;
+// 	pthread_mutex_t			*out_m;
+// 	int						ph_num;
+// 	int						is_all_ate;
+//	int						is_to_die;
+// }	t_data;
+
+typedef struct s_philo {
+	int						index;
+
 	long long				start;
 	int						to_die;
 	int						to_eat;
 	int						to_sleep;
-	pthread_mutex_t			*out_m;
-	int						ph_num;
-	int						is_all_ate;
-	int						is_to_die;
-}	t_data;
+	int						times_to_eat;
 
-typedef struct s_philo {
-	long long				last_meal;
 	int						nb_meal;
-	int						index;
-	pthread_mutex_t			*fork_r;
-	pthread_mutex_t			*fork_l;
-	pthread_mutex_t			*last_m;
-	t_data					*data;
+	long long				last_meal;
+	
+	int						is_eaten;
+	int						is_to_die;
+
+	// pthread_mutex_t			*fork_r;
+	// pthread_mutex_t			*fork_l;
+	// pthread_mutex_t			*last_m;
 }	t_philo;
 
 typedef struct s_philos {
-	t_philo			*ph_arr;
+	// t_philo			*ph_arr;
 	int				ph_num;
-	int				times_to_eat;
-	t_data			data;
-	pthread_mutex_t	*forks;
-	pthread_mutex_t	*last_mutexes;
+	t_philo			philo;
+	// int				times_to_eat;
+	// t_data			data;
+	// pthread_mutex_t	*forks;
+	// pthread_mutex_t	*last_mutexes;
 }	t_philos;
+
+
 
 int			initialize(t_philos *philos, int ac, char **av);
 int			all_mutex_init(t_philos *philos);

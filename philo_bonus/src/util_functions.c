@@ -37,7 +37,7 @@ long long	timedif(long long past, long long pres)
 {
 	return (pres - past);
 }
-
+/*
 void	print_action(t_philo *philo, char *msg)
 {
 	// lock the writing mutex
@@ -52,3 +52,4 @@ void	print_action(t_philo *philo, char *msg)
 	pthread_mutex_unlock(philo->data->out_m);
 	return ;
 }
+*/
