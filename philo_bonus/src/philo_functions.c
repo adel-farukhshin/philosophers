@@ -89,6 +89,13 @@ void	ph_eat(t_philo *philo)
 // }
 
 
+void	print_action(t_philo *philo, char *msg)
+{
+	sem_wait(philo->out);
+	printf("%llu %d %s\n", timestamp() - philo->start, philo->index, msg);
+	sem_post(philo->out);
+}
+
 void	*to_stop(void *data)
 {
 	t_philo	*philo;
@@ -102,6 +109,7 @@ void	*to_stop(void *data)
 		if (timestamp() - philo->start >= philo->to_die)
 		{
 			philo->is_to_die = 1;
+			// print_action(philo, "died");
 			sem_wait(philo->out);
 			printf("%llu %d is_died\n", timestamp() - philo->start, philo->index);
 			sem_post(philo->out);
