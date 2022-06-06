@@ -99,7 +99,7 @@ void	*to_stop(void *data)
 		// Check times of eating
 
 		// Check is died
-		if (timestamp() - philo->start >= philo->to_die)
+		if (timestamp() - philo->last_meal >= philo->to_die)
 		{
 			philo->is_to_die = 1;
 			sem_wait(philo->out);
