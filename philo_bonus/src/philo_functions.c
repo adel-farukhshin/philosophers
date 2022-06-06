@@ -32,14 +32,14 @@ pthread_mutex_t	*max(pthread_mutex_t *r, pthread_mutex_t *l)
 	else
 		return (l);
 }
-
-void	smart_sleep(long long time, t_philo *philo)
+*/
+void	smart_sleep(t_philo *philo, long long time)
 {
 	long long	i;
 	long long	a;
 
 	i = timestamp();
-	while (!(philo->data->is_to_die))
+	while (!(philo->is_to_die))
 	{
 		a = timestamp();
 		if (a - i >= time)
@@ -47,7 +47,7 @@ void	smart_sleep(long long time, t_philo *philo)
 		usleep(50);
 	}
 }
-
+/*
 void	ph_eat(t_philo *philo)
 {
 	pthread_mutex_lock(philo->last_m);
@@ -117,6 +117,26 @@ void	*to_stop(void *data)
 		exit (0);
 }
 
+void	ph_routine(t_philo *philo)
+{
+	sem_wait(philo->fork);
+	print_action(philo, "has taken a 1_fork");
+	sem_wait(philo->fork);
+	print_action(philo, "has taken a 2_fork");
+
+	print_action(philo, "is eating");
+	philo->last_meal = timestamp();
+	philo->nb_meal++;
+	smart_sleep(philo, philo->to_eat);
+
+	sem_post(philo->fork);
+	sem_post(philo->fork);
+
+	print_action(philo, "is sleeping");
+	smart_sleep(philo, philo->to_sleep);
+
+	print_action(philo, "is thinking");
+}
 
 int	philosopher(t_philo *philo)
 {
@@ -129,7 +149,7 @@ int	philosopher(t_philo *philo)
 	while (!philo->is_to_die)
 	// routine
 	{
-
+		ph_routine(philo);
 	}
 	
 	
