@@ -83,9 +83,40 @@ void	ph_eat(t_philo *philo)
 // 	return (0);
 // }
 
+
+void	*to_stop(void *philo)
+{
+	t_philo	*philo;
+
+	while (1)
+	{
+		// Check times of eating
+
+		// Check is died
+	}
+
+
+	// Maybe put it in cycle?
+	// if is died
+	// exit (1);
+	// else
+	exit (0);
+}
+
+
 int	philosopher(t_philo *philo)
 {
-	smart_sleep(philo->data->to_sleep, philo);
-	// printf("%p", philo);
-	return (1);
+	pthread_t	t;
+
+	if (pthread_create(&t, NULL, to_stop, philo))
+		return (1);
+	
+	// while (!is_died)
+	// routine
+	
+	
+	if (pthread_join(t, NULL))
+		return (1);
+	else
+		return (0);
 }
