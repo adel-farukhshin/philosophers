@@ -101,7 +101,7 @@ void	*to_stop(void *data)
 		// Check is died
 		if (timestamp() - philo->start >= philo->to_die)
 		{
-			philo->to_die = 1;
+			philo->is_to_die = 1;
 			printf("%llu %d is_died\n", timestamp() - philo->start, philo->index);
 			// print is died
 			break ;
@@ -129,12 +129,18 @@ int	philosopher(t_philo *philo)
 	while (!philo->is_to_die)
 	// routine
 	{
-		
+
 	}
 	
 	
 	if (pthread_join(t, NULL))
+	{
+		printf("a\n");
 		return (1);
+	}
 	else
+	{
+		printf("b\n");
 		return (0);
+	}
 }
