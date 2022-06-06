@@ -13,6 +13,7 @@
 #include "philosophers.h"
 #include <stdio.h>
 #include <unistd.h>
+#include <stdlib.h>
 
 /*
 
@@ -88,35 +89,48 @@ void	ph_eat(t_philo *philo)
 // }
 
 
-void	*to_stop(void *philo)
+void	*to_stop(void *data)
 {
 	t_philo	*philo;
 
+	philo = data;
 	while (1)
 	{
 		// Check times of eating
 
 		// Check is died
+		if (timestamp() - philo->start >= philo->to_die)
+		{
+			philo->to_die = 1;
+			printf("%llu %d is_died\n", timestamp() - philo->start, philo->index);
+			// print is died
+			break ;
+		}
+		
 	}
 
 
 	// Maybe put it in cycle?
-	// if is died
-	// exit (1);
-	// else
-	exit (0);
+	if (philo->is_to_die)
+		exit (1);
+	else
+		exit (0);
 }
 
 
 int	philosopher(t_philo *philo)
 {
 	pthread_t	t;
+	
 
 	if (pthread_create(&t, NULL, to_stop, philo))
 		return (1);
 	
-	// while (!is_died)
+	while (!philo->is_to_die)
 	// routine
+	{
+		
+	}
 	
 	
 	if (pthread_join(t, NULL))
