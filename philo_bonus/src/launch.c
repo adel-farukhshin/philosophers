@@ -153,15 +153,17 @@ int	launch(t_philos *philos)
 			{
 				return(1);
 			}
+			else
+				return (0);
 		}
 		i++;
 	}
 	int	signal;
-		while (waitpid(-1, &signal, 0) > 0) // or > 0
-		{
-			if (WEXITSTATUS(signal) == 1)
-				kill_processes(pids, philos->ph_num - 1);
-		}
+	while (waitpid(-1, &signal, 0) > 0) // or > 0
+	{
+		if (WEXITSTATUS(signal) == 1)
+			kill_processes(pids, philos->ph_num - 1);
+	}
 		
 	free(pids);
 	return (0);
