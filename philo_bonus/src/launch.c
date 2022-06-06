@@ -142,16 +142,17 @@ int	launch(t_philos *philos)
 	if (!pids)
 		return (1);
 	philos->philo.start = timestamp();
-	int	i = 1;
+	int	i = 0;
 	while (i < philos->ph_num)
 	{
-		pids[i - 1] = fork();
+		pids[i] = fork();
 		// printf("pid %d\n", pids[i]);
-		if (pids[i - 1] == -1)
+		if (pids[i] == -1)
 			kill_processes(pids, i - 1);
-		if (pids[i - 1] == 0)
+		if (pids[i] == 0)
 		{
-			philos->philo.index = i;
+			// printf("proc created\n");
+			philos->philo.index = i + 1;
 			philos->philo.last_meal = timestamp();
 			if (philosopher(&(philos->philo)))
 			{
