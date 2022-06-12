@@ -6,8 +6,8 @@ SRC =	philosophers.c philo_functions.c util_functions.c \
 
 OBJ = $(addprefix $(OBJDIR),$(SRC:.c=.o))
 
-CFLAGS = -Wall -Wextra -Werror 
-EFLAGS = -fsanitize=thread
+CFLAGS = -Wall -Wextra -Werror
+AFLAGS = -g -O2 -fsanitize=thread
 
 SRCDIR = ./src/
 OBJDIR = ./obj/
