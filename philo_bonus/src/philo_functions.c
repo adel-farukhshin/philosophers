@@ -142,24 +142,27 @@ void	ph_routine(t_philo *philo)
 	print_action(philo, "is thinking");
 }
 
+int	add_sem(t_philo *philo);
+
 int	philosopher(t_philo *philo)
 {
 	pthread_t	t;
 	
+	if (add_sem(philo))
+		return (1);
 
 	if (pthread_create(&t, NULL, to_stop, philo))
 		return (1);
-	
+
 	while (!philo->is_to_die)
 	// routine
 	{
 		ph_routine(philo);
 	}
 	
-	
 	if (pthread_join(t, NULL))
 	{
-		printf("a\n");
+		printf("a\n"); // delete
 		return (1);
 	}
 	else
@@ -167,4 +170,28 @@ int	philosopher(t_philo *philo)
 		printf("b\n");
 		return (0);
 	}
+	// return (0);
+}
+
+int	add_sem(t_philo *philo)
+{
+	char	buf[10];
+
+	name_file("last_", buf, philo->index);
+	sem_unlink(buf);
+	philo->last_s = sem_open(buf, O_CREAT, 0644, 1);
+	if (philo->last_s == SEM_FAILED)
+		return (1);
+	// print_action(philo, "create last"); // delete
+
+	name_file("die_", buf, philo->index);
+	sem_unlink(buf);
+	philo->die_s = sem_open(buf, O_CREAT, 0644, 1);
+	if (philo->die_s == SEM_FAILED)
+	{
+		sem_close(philo->last_s);	
+		return (1);
+	}
+	// print_action(philo, "create die"); // delete
+	return (0);
 }
