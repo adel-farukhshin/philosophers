@@ -45,6 +45,8 @@ typedef struct s_philo {
 
 	sem_t					*out;
 	sem_t					*fork;
+	sem_t					*last_s;
+	sem_t					*die_s;
 	// pthread_mutex_t			*fork_r;
 	// pthread_mutex_t			*fork_l;
 	// pthread_mutex_t			*last_m;
@@ -75,5 +77,7 @@ int			philosopher(t_philo *philo);
 long long	timestamp(void);
 long long	timedif(long long last, long long next);
 void		print_action(t_philo *philo, char *msg);
+
+void		name_file(char *src, char dst[], int index);
 
 #endif
