@@ -116,9 +116,15 @@ void	*to_stop(void *data)
 
 	// Maybe put it in cycle?
 	if (philo->is_to_die)
+	{
+		remove_sem(philo, 2);
 		exit (1);
+	}
 	else
+	{
+		remove_sem(philo, 2);
 		exit (0);
+	}
 }
 
 void	ph_routine(t_philo *philo)
@@ -143,6 +149,7 @@ void	ph_routine(t_philo *philo)
 }
 
 int	add_sem(t_philo *philo);
+void	remove_sem(t_philo *philo, int mode);
 
 int	philosopher(t_philo *philo)
 {
@@ -152,8 +159,10 @@ int	philosopher(t_philo *philo)
 		return (1);
 
 	if (pthread_create(&t, NULL, to_stop, philo))
+	{
+		remove_sem(philo, 2);
 		return (1);
-
+	}
 	while (!philo->is_to_die)
 	// routine
 	{
@@ -189,9 +198,27 @@ int	add_sem(t_philo *philo)
 	philo->die_s = sem_open(buf, O_CREAT, 0644, 1);
 	if (philo->die_s == SEM_FAILED)
 	{
-		sem_close(philo->last_s);	
+		remove_sem(philo, 1);
 		return (1);
 	}
 	// print_action(philo, "create die"); // delete
 	return (0);
+}
+
+void	remove_sem(t_philo *philo, int mode)
+{
+	char	buf[10];
+
+	if (mode > 0)
+	{
+		sem_close(philo->last_s);
+		name_file("last_", buf, philo->index);
+		sem_unlink(buf);
+	}
+	if (mode > 1)
+	{
+		sem_close(philo->die_s);
+		name_file("die_", buf, philo->index);
+		sem_unlink(buf);
+	}
 }
