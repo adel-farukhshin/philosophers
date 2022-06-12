@@ -15,6 +15,9 @@
 #include <unistd.h>
 #include <stdlib.h>
 
+int	add_sem(t_philo *philo);
+void	remove_sem(t_philo *philo, int mode);
+
 /*
 
 pthread_mutex_t	*min(pthread_mutex_t *r, pthread_mutex_t *l)
@@ -103,6 +106,7 @@ void	*to_stop(void *data)
 		// 	break ;
 		// }
 		// Check is died
+		// sem_wait(philo->last_s);
 		if (timestamp() - philo->last_meal >= philo->to_die)
 		{
 			philo->is_to_die = 1;
@@ -110,6 +114,7 @@ void	*to_stop(void *data)
 			printf("%llu %d is_died\n", timestamp() - philo->start, philo->index);
 			break ;
 		}
+		// sem_post(philo->last_s);
 		
 	}
 
@@ -135,7 +140,9 @@ void	ph_routine(t_philo *philo)
 	print_action(philo, "has taken a 2_fork");
 
 	print_action(philo, "is eating");
+	// sem_wait(philo->last_s);
 	philo->last_meal = timestamp();
+	// sem_post(philo->last_s);
 	philo->nb_meal++;
 	smart_sleep(philo, philo->to_eat);
 
@@ -147,9 +154,6 @@ void	ph_routine(t_philo *philo)
 
 	print_action(philo, "is thinking");
 }
-
-int	add_sem(t_philo *philo);
-void	remove_sem(t_philo *philo, int mode);
 
 int	philosopher(t_philo *philo)
 {
