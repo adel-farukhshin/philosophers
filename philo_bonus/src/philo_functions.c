@@ -42,11 +42,17 @@ void	smart_sleep(t_philo *philo, long long time)
 	long long	a;
 
 	i = timestamp();
-	while (!(philo->is_to_die))
+	while (1)
+	// while (!(philo->is_to_die))
 	{
 		a = timestamp();
-		if (a - i >= time)
+		sem_wait(philo->die_s);
+		if (a - i >= time || philo->is_to_die)
+		{
+			sem_post(philo->die_s);
 			break ;
+		}
+		sem_post(philo->die_s);
 		usleep(50);
 	}
 }
@@ -109,7 +115,9 @@ void	*to_stop(void *data)
 		sem_wait(philo->last_s);
 		if (timestamp() - philo->last_meal >= philo->to_die)
 		{
+			sem_wait(philo->die_s);
 			philo->is_to_die = 1;
+			sem_post(philo->die_s);
 			sem_wait(philo->out);
 			printf("%llu %d is_died\n", timestamp() - philo->start, philo->index);
 			break ;
@@ -167,10 +175,17 @@ int	philosopher(t_philo *philo)
 		remove_sem(philo, 2);
 		return (1);
 	}
-	while (!philo->is_to_die)
+	while (1)
 	// routine
 	{
 		ph_routine(philo);
+		sem_wait(philo->die_s);
+		if (philo->is_to_die)
+		{
+			sem_post(philo->die_s);
+			break;
+		}
+		sem_post(philo->die_s);
 	}
 	
 	if (pthread_join(t, NULL))
