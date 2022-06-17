@@ -14,6 +14,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <fcntl.h>
 
 int	add_sem(t_philo *philo);
 void	remove_sem(t_philo *philo, int mode);

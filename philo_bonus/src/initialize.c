@@ -12,6 +12,7 @@
 
 #include "philosophers.h"
 #include <stdlib.h>
+#include <fcntl.h>
 
 // int	init_philos(t_philos *philos)
 // {
