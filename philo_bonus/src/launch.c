@@ -171,10 +171,10 @@ int	launch(t_philos *philos)
 			usleep(5000);
 		i++;
 	}
-	int	signal;
-	while (waitpid(-1, &signal, 0) > 0) // or > 0
+	int	status;
+	while (waitpid(-1, &status, 0) > 0) // or > 0
 	{
-		if (WEXITSTATUS(signal) == 1)
+		if (WEXITSTATUS(status) == 1)
 			return (kill_processes(pids, philos->ph_num - 1));
 	}
 	
