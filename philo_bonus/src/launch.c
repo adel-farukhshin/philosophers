@@ -141,6 +141,10 @@ int	kill_processes(pid_t *pids, int nb)
 	return (0);
 }
 
+void	create_processes(t_philos *philos, pid_t *pids);
+void	wait_processes(t_philos *philos, pid_t *pids);
+
+
 int	launch(t_philos *philos)
 {
 	pid_t	*pids;
@@ -152,6 +156,8 @@ int	launch(t_philos *philos)
 		return (1);
 	}
 	philos->philo.start = timestamp();
+	create_processes(philos, pids);
+/*
 	int	i = 0;
 	while (i < philos->ph_num)
 	{
@@ -171,13 +177,58 @@ int	launch(t_philos *philos)
 			usleep(5000);
 		i++;
 	}
+*/
+
+	wait_processes(philos, pids);
+/*
 	int	status;
 	while (waitpid(-1, &status, 0) > 0) // or > 0
 	{
 		if (WEXITSTATUS(status) == 1)
 			return (kill_processes(pids, philos->ph_num - 1));
 	}
+*/
 	
 	free(pids);
 	return (0);
+}
+
+void	create_processes(t_philos *philos, pid_t *pids)
+{
+	int	i;
+
+	i = 0;
+	while (i < philos->ph_num)
+	{
+		pids[i] = fork();
+		if (pids[i] == -1)
+		{
+			kill_processes(pids, i - 1);
+			return ;
+		}
+		if (pids[i] == 0)
+		{
+			philos->philo.index = i + 1;
+			philos->philo.last_meal = timestamp();
+			philosopher(&(philos->philo));
+			// here can be return handling
+		}
+		if (i % 2 == 0)
+			usleep(5000);
+		i++;
+	}
+}
+
+void	wait_processes(t_philos *philos, pid_t *pids)
+{
+	int	status;
+	
+	while (waitpid(-1, &status, 0) > 0)
+	{
+		if (WEXITSTATUS(status) == 1 || WEXITSTATUS(status) == 2)
+		{
+			kill_processes(pids, philos->ph_num - 1);
+			break ;
+		}
+	}
 }
