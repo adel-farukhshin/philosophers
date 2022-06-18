@@ -19,6 +19,9 @@
 int	add_sem(t_philo *philo);
 void	remove_sem(t_philo *philo, int mode);
 
+int		create_sem(char *name, sem_t **sem, int value);
+void	delete_sem(char *name, sem_t **sem);
+
 /*
 
 pthread_mutex_t	*min(pthread_mutex_t *r, pthread_mutex_t *l)
@@ -226,6 +229,15 @@ int	add_sem(t_philo *philo)
 	return (0);
 }
 
+int	create_sem(char *name, sem_t **sem, int value)
+{
+	sem_unlink(name);
+	*sem = sem_open(name, O_CREAT, 0644, value);
+	if (*sem == SEM_FAILED)
+		return (1);
+	return (0);
+}
+
 void	remove_sem(t_philo *philo, int mode)
 {
 	char	buf[10];
@@ -242,4 +254,10 @@ void	remove_sem(t_philo *philo, int mode)
 		name_file("die_", buf, philo->index);
 		sem_unlink(buf);
 	}
+}
+
+void	delete_sem(char *name, sem_t **sem)
+{
+	sem_close(*sem);
+	sem_unlink(name);
 }
