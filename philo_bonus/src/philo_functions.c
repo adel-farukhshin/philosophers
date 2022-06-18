@@ -219,6 +219,23 @@ int	add_sem(t_philo *philo)
 		remove_sem(philo, 1);
 		return (1);
 	}
+
+	name_file("tte_", buf, philo->index);
+	if (create_sem(buf, &(philo->tte_s), 1))
+	{
+		remove_sem(philo, 2);
+		return (1);
+	}
+
+	name_file("ie_", buf, philo->index);
+	if (create_sem(buf, &(philo->is_eaten_s), 1))
+	{
+		remove_sem(philo, 3);
+		return (1);
+	}
+
+
+
 	return (0);
 }
 
@@ -270,6 +287,16 @@ void	remove_sem(t_philo *philo, int mode)
 	{
 		name_file("die_", buf, philo->index);
 		delete_sem(buf, &(philo->die_s));
+	}
+	if (mode > 2)
+	{
+		name_file("tte_", buf, philo->index);
+		delete_sem(buf, &(philo->tte_s));
+	}
+	if (mode > 3)
+	{
+		name_file("ie_", buf, philo->index);
+		delete_sem(buf, &(philo->is_eaten_s));
 	}
 }
 
