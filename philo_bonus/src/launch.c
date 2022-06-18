@@ -225,7 +225,7 @@ void	wait_processes(t_philos *philos, pid_t *pids)
 	
 	while (waitpid(-1, &status, 0) > 0)
 	{
-		if (WEXITSTATUS(status) == 1 || WEXITSTATUS(status) == 2)
+		if (WEXITSTATUS(status) == 1)
 		{
 			kill_processes(pids, philos->ph_num - 1);
 			break ;
