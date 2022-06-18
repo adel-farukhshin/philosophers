@@ -5,6 +5,7 @@
 #include <stdlib.h>
 # include <semaphore.h>
 #include <fcntl.h>
+#include <sys/wait.h>
 
 sem_t	*sem;
 int		to_stop;
@@ -15,54 +16,80 @@ void	remove_sem(void);
 
 int	main()
 {
+	pid_t pid;
 
-	to_stop = 0;
-	add_sem();
+	pid = fork();
 
-	pthread_t	t;
-	
-	if (pthread_create(&t, NULL, &routine, NULL))
+	if (!pid)
 	{
-		return (1);
-	}
+		to_stop = 0;
+		add_sem();
 
-
-	// int	i = 0;
-	while (1)
-	// routine
-	{
-		sem_wait(sem);
+		pthread_t	t;
 		
-		if (to_stop)
+		if (pthread_create(&t, NULL, &routine, NULL))
 		{
-			printf("now we are stopping\n");
-			break ;
+			return (1);
 		}
-		sem_post(sem);
+		// pthread_detach(t);
 
-		// if (i % 1000 == 0)
-		// 	printf("%d\n", i);
-		// i++;
-	}
-	
-	int	*ret;
 
-	
-	if (pthread_join(t, (void **) &ret))
-		printf("error\n");
-	else
-		printf("pthread joined\n");
+		// int	i = 0;
+		while (1)
+		// routine
+		{
+			sem_wait(sem);
+			
+			if (to_stop)
+			{
+				printf("now we are stopping\n");
+				break ;
+			}
+			sem_post(sem);
+
+			// if (i % 1000 == 0)
+			// 	printf("%d\n", i);
+			// i++;
+		}
+		printf("after while cycle\n");
 		
+		int	*ret;
+
+		if (pthread_join(t, (void **) &ret))
+			printf("error\n");
+		else
+			printf("pthread joined\n");
+		printf("exit code %d\n", *ret);
+
+		free(ret);
+		printf("after pthread\n");
+		remove_sem();
+		return (0);
+	}
+
+	wait(&pid);
+	// int	*ret;
+
+	// printf("before pthread_join\n");
+
+	
+		
+	
+
+	// printf("before remove_sem %d\n", *ret);
+	// printf("before remove_sem\n");
 	// free(ret);
-	remove_sem();
+	
+	printf("before end program\n");
 	return (0);
 }
 
 void	*routine(void *data)
 {
 	int	*ret = data;
-	// ret = malloc(sizeof(int));
-	// *ret = 1;
+	// (void ) ret;
+	ret = malloc(sizeof(int));
+	*ret = 1;
 	sleep(1);
 
 	sem_wait(sem);
@@ -71,6 +98,7 @@ void	*routine(void *data)
 	sem_post(sem);
 
 	return (ret);
+	// exit (*ret);
 }
 
 
