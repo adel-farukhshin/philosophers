@@ -128,15 +128,14 @@ void	*to_stop(void *data)
 	}
 
 
+	remove_sem(philo, 2);
 	// Maybe put it in cycle?
 	if (philo->is_to_die)
 	{
-		remove_sem(philo, 2);
 		exit (1);
 	}
 	else
 	{
-		remove_sem(philo, 2);
 		exit (0);
 	}
 }
@@ -189,17 +188,19 @@ int	philosopher(t_philo *philo)
 		sem_post(philo->die_s);
 	}
 	
-	if (pthread_join(t, NULL))
-	{
-		printf("a\n"); // delete
-		return (1);
-	}
-	else
-	{
-		printf("b\n");
-		return (0);
-	}
-	// return (0);
+	pthread_join(t, NULL);
+
+	// if (pthread_join(t, NULL)) // error
+	// {
+	// 	printf("a\n"); // delete
+	// 	return (1);
+	// }
+	// else
+	// {
+	// 	printf("b\n");
+	// 	return (0);
+	// }
+	return (0);
 }
 
 int	add_sem(t_philo *philo)
