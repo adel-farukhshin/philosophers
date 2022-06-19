@@ -51,12 +51,15 @@ void	smart_sleep(t_philo *philo, long long time)
 	{
 		a = timestamp();
 		sem_wait(philo->die_s);
-		if (a - i >= time || philo->is_to_die)
+		sem_wait(philo->is_eaten_s);
+		if (a - i >= time || philo->is_to_die || (philo->times_to_eat != -1 && philo->is_eaten))
 		{
+			sem_post(philo->is_eaten_s);
 			sem_post(philo->die_s);
 			break ;
 		}
 		sem_post(philo->die_s);
+		sem_post(philo->is_eaten_s);
 		usleep(50);
 	}
 }
@@ -110,15 +113,16 @@ void	*to_stop(void *data)
 	while (1)
 	{
 		// Check times of eating
-		// sem_wait(philo->tte_s);
-		// if (philo->nb_meal == philo->times_to_eat)
-		// {
-		// 	sem_wait(philo->is_eaten_s);
-		// 	philo->is_eaten = 1;
-		// 	sem_post(philo->is_eaten_s);
-		// 	break ;
-		// }
-		// sem_post(philo->tte_s);
+		sem_wait(philo->nm_s);
+		if (philo->times_to_eat != -1 && philo->nb_meal >= philo->times_to_eat)
+		{
+			// sem_post(philo->nm_s);
+			sem_wait(philo->is_eaten_s);
+			philo->is_eaten = 1;
+			sem_post(philo->is_eaten_s);
+			break ;
+		}
+		sem_post(philo->nm_s);
 
 		// Check is died
 		sem_wait(philo->last_s);
@@ -159,7 +163,11 @@ void	ph_routine(t_philo *philo)
 	sem_wait(philo->last_s);
 	philo->last_meal = timestamp();
 	sem_post(philo->last_s);
+
+	sem_wait(philo->nm_s);
 	philo->nb_meal++;
+	sem_post(philo->nm_s);
+	
 	smart_sleep(philo, philo->to_eat);
 
 	sem_post(philo->fork);
@@ -187,6 +195,15 @@ int	philosopher(t_philo *philo)
 	// routine
 	{
 		ph_routine(philo);
+
+		sem_wait(philo->is_eaten_s);
+		if (philo->is_eaten)
+		{
+			sem_post(philo->is_eaten_s);
+			break ;
+		}
+		sem_post(philo->is_eaten_s);
+
 		sem_wait(philo->die_s);
 		if (philo->is_to_die)
 		{
