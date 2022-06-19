@@ -164,14 +164,15 @@ void	ph_routine(t_philo *philo)
 	philo->last_meal = timestamp();
 	sem_post(philo->last_s);
 
-	sem_wait(philo->nm_s);
-	philo->nb_meal++;
-	sem_post(philo->nm_s);
 	
 	smart_sleep(philo, philo->to_eat);
 
 	sem_post(philo->fork);
 	sem_post(philo->fork);
+
+	sem_wait(philo->nm_s);
+	philo->nb_meal++;
+	sem_post(philo->nm_s);
 
 	print_action(philo, "is sleeping");
 	smart_sleep(philo, philo->to_sleep);
