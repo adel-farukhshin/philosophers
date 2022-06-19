@@ -60,7 +60,7 @@ void	smart_sleep(t_philo *philo, long long time)
 		}
 		sem_post(philo->die_s);
 		sem_post(philo->is_eaten_s);
-		usleep(50);
+		usleep(500);
 	}
 }
 /*
@@ -192,6 +192,10 @@ int	philosopher(t_philo *philo)
 		remove_sem(philo, 4);
 		return (1);
 	}
+
+	if (philo->index % 2 == 0)
+		smart_sleep(philo, philo->to_eat / 2);
+
 	while (1)
 	// routine
 	{

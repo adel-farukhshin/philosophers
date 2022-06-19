@@ -213,7 +213,7 @@ void	create_processes(t_philos *philos, pid_t *pids)
 			philosopher(&(philos->philo));
 			// here can be return handling
 		}
-		usleep(4800);
+		// usleep(4800);
 		i++;
 	}
 }
