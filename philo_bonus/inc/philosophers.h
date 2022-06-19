@@ -70,6 +70,10 @@ typedef struct s_philos {
 int			initialize(t_philos *philos, int ac, char **av);
 void		sem_delete(t_philo *philo, int mode);
 
+int			create_sem(char *name, sem_t **sem, int value);
+void		delete_sem(char *name, sem_t **sem);
+
+
 int			all_mutex_init(t_philos *philos);
 void		all_mutex_delete(t_philos *philos, int mode);
 
