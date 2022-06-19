@@ -110,11 +110,16 @@ void	*to_stop(void *data)
 	while (1)
 	{
 		// Check times of eating
+		// sem_wait(philo->tte_s);
 		// if (philo->nb_meal == philo->times_to_eat)
 		// {
+		// 	sem_wait(philo->is_eaten_s);
 		// 	philo->is_eaten = 1;
+		// 	sem_post(philo->is_eaten_s);
 		// 	break ;
 		// }
+		// sem_post(philo->tte_s);
+
 		// Check is died
 		sem_wait(philo->last_s);
 		if (timestamp() - philo->last_meal >= philo->to_die)
@@ -220,8 +225,8 @@ int	add_sem(t_philo *philo)
 		return (1);
 	}
 
-	name_file("tte_", buf, philo->index);
-	if (create_sem(buf, &(philo->tte_s), 1))
+	name_file("nm_", buf, philo->index);
+	if (create_sem(buf, &(philo->nm_s), 1))
 	{
 		remove_sem(philo, 2);
 		return (1);
@@ -290,8 +295,8 @@ void	remove_sem(t_philo *philo, int mode)
 	}
 	if (mode > 2)
 	{
-		name_file("tte_", buf, philo->index);
-		delete_sem(buf, &(philo->tte_s));
+		name_file("nm_", buf, philo->index);
+		delete_sem(buf, &(philo->nm_s));
 	}
 	if (mode > 3)
 	{
