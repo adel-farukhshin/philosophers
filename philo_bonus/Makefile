@@ -15,8 +15,10 @@ INCDIR = ./inc/
 
 HEADER = philosophers.h 
 
+CC = cc
+
 ${OBJDIR}%.o : ${SRCDIR}%.c ${INCDIR}${HEADER}
-	cc ${CFLAGS} -c $< -I${INCDIR} -o $@
+	${CC} ${CFLAGS} -c $< -I${INCDIR} -o $@
 
 all : ${NAME}
 
