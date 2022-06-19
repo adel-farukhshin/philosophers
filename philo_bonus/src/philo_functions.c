@@ -131,7 +131,7 @@ void	*to_stop(void *data)
 	}
 
 
-	remove_sem(philo, 2);
+	remove_sem(philo, 4);
 	// Maybe put it in cycle?
 	if (philo->is_to_die)
 	{
@@ -175,7 +175,7 @@ int	philosopher(t_philo *philo)
 
 	if (pthread_create(&t, NULL, to_stop, philo))
 	{
-		remove_sem(philo, 2);
+		remove_sem(philo, 4);
 		return (1);
 	}
 	while (1)
