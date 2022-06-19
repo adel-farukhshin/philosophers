@@ -47,6 +47,9 @@ typedef struct s_philo {
 	sem_t					*fork;
 	sem_t					*last_s;
 	sem_t					*die_s;
+	sem_t					*tte_s;
+	sem_t					*is_eaten_s;
+
 	// pthread_mutex_t			*fork_r;
 	// pthread_mutex_t			*fork_l;
 	// pthread_mutex_t			*last_m;
