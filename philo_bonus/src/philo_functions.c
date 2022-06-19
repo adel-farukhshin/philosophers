@@ -114,7 +114,7 @@ void	*to_stop(void *data)
 	{
 		// Check times of eating
 		sem_wait(philo->nm_s);
-		if (philo->times_to_eat != -1 && philo->nb_meal >= philo->times_to_eat)
+		if (philo->times_to_eat != -1 && philo->nb_meal == philo->times_to_eat)
 		{
 			// sem_post(philo->nm_s);
 			sem_wait(philo->is_eaten_s);
