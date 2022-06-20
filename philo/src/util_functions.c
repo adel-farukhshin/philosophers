@@ -1,8 +1,17 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   util_functions.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: bsarai <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/06/20 21:14:57 by bsarai            #+#    #+#             */
+/*   Updated: 2022/06/20 21:14:59 by bsarai           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "philosophers.h"
 #include <stdio.h>
-
 
 int	ft_atoi(const char *str)
 {
@@ -27,7 +36,7 @@ int	ft_atoi(const char *str)
 
 long long	timestamp(void)
 {
-	struct timeval tv;
+	struct timeval	tv;
 
 	gettimeofday(&tv, NULL);
 	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
@@ -40,7 +49,6 @@ long long	timedif(long long past, long long pres)
 
 void	print_action(t_philo *philo, char *msg)
 {
-	// lock the writing mutex
 	if (!philo->data->out_m)
 		return ;
 	pthread_mutex_lock(philo->data->out_m);
@@ -50,7 +58,6 @@ void	print_action(t_philo *philo, char *msg)
 		printf("%d ", philo->index);
 		printf("%s\n", msg);
 	}
-	// unlock the writing mutex
 	pthread_mutex_unlock(philo->data->out_m);
 	return ;
 }

@@ -60,17 +60,6 @@ void	*philosopher(void *data)
 	t_philo	*philo;
 
 	philo = data;
-	// if (philo->index % 2 == 0)
-	// {
-	// 	print_action(philo, "a");
-	// 	usleep(2500);
-	// 	print_action(philo, "b");
-	// }
-	// if (philo->data->ph_num == 1)
-	// {
-	// 	smart_sleep(philo->data->to_die, philo);
-	// 	philo->data->is_to_die = 1;
-	// }
 	while (!(philo->is_to_die) && !(philo->data->is_all_ate))
 	{
 		pthread_mutex_lock(min(philo->fork_r, philo->fork_l));
