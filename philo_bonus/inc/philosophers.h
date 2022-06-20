@@ -72,7 +72,8 @@ void		sem_delete(t_philo *philo, int mode);
 
 int			create_sem(char *name, sem_t **sem, int value);
 void		delete_sem(char *name, sem_t **sem);
-
+int			add_sem(t_philo *philo);
+void		remove_sem(t_philo *philo, int mode);
 
 int			all_mutex_init(t_philos *philos);
 void		all_mutex_delete(t_philos *philos, int mode);

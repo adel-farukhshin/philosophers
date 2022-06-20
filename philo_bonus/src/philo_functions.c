@@ -16,11 +16,6 @@
 #include <stdlib.h>
 #include <fcntl.h>
 
-int	add_sem(t_philo *philo);
-void	remove_sem(t_philo *philo, int mode);
-
-int		create_sem(char *name, sem_t **sem, int value);
-void	delete_sem(char *name, sem_t **sem);
 
 /*
 
@@ -90,19 +85,15 @@ void	*to_stop(void *data)
 	philo = data;
 	while (1)
 	{
-		// Check times of eating
 		sem_wait(philo->nm_s);
 		if (philo->times_to_eat != -1 && philo->nb_meal == philo->times_to_eat)
 		{
-			// sem_post(philo->nm_s);
 			sem_wait(philo->is_eaten_s);
 			philo->is_eaten = 1;
 			sem_post(philo->is_eaten_s);
 			break ;
 		}
 		sem_post(philo->nm_s);
-
-		// Check is died
 		sem_wait(philo->last_s);
 		if (timestamp() - philo->last_meal >= philo->to_die)
 		{
@@ -114,20 +105,12 @@ void	*to_stop(void *data)
 			break ;
 		}
 		sem_post(philo->last_s);
-		
 	}
-
-
 	remove_sem(philo, 4);
-	// Maybe put it in cycle?
 	if (philo->is_to_die)
-	{
 		exit (1);
-	}
 	else
-	{
 		exit (0);
-	}
 }
 
 void	ph_routine(t_philo *philo)
@@ -211,38 +194,7 @@ int	philosopher(t_philo *philo)
 	exit (0);
 }
 
-int	add_sem(t_philo *philo)
-{
-	char	buf[10];
 
-	name_file("last_", buf, philo->index);
-	create_sem(buf, &(philo->last_s), 1);
-
-	name_file("die_", buf, philo->index);
-	if (create_sem(buf, &(philo->die_s), 1))
-	{
-		remove_sem(philo, 1);
-		return (1);
-	}
-
-	name_file("nm_", buf, philo->index);
-	if (create_sem(buf, &(philo->nm_s), 1))
-	{
-		remove_sem(philo, 2);
-		return (1);
-	}
-
-	name_file("ie_", buf, philo->index);
-	if (create_sem(buf, &(philo->is_eaten_s), 1))
-	{
-		remove_sem(philo, 3);
-		return (1);
-	}
-
-
-
-	return (0);
-}
 
 /*
 int	add_sem(t_philo *philo)
@@ -272,31 +224,7 @@ int	add_sem(t_philo *philo)
 
 
 
-void	remove_sem(t_philo *philo, int mode)
-{
-	char	buf[10];
 
-	if (mode > 0)
-	{
-		name_file("last_", buf, philo->index);
-		delete_sem(buf, &(philo->last_s));
-	}
-	if (mode > 1)
-	{
-		name_file("die_", buf, philo->index);
-		delete_sem(buf, &(philo->die_s));
-	}
-	if (mode > 2)
-	{
-		name_file("nm_", buf, philo->index);
-		delete_sem(buf, &(philo->nm_s));
-	}
-	if (mode > 3)
-	{
-		name_file("ie_", buf, philo->index);
-		delete_sem(buf, &(philo->is_eaten_s));
-	}
-}
 
 /*
 void	remove_sem(t_philo *philo, int mode)
