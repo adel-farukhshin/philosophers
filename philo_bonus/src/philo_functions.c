@@ -16,7 +16,41 @@
 #include <stdlib.h>
 #include <fcntl.h>
 
-void	*to_stop(void *data)
+static void	ph_routine(t_philo *philo);
+static void	*to_stop(void *data);
+static int	check_eaten(t_philo *philo);
+
+int	philosopher(t_philo *philo)
+{
+	pthread_t	t;
+	
+	if (add_sem(philo))
+		exit (1);
+	if (pthread_create(&t, NULL, to_stop, philo))
+	{
+		remove_sem(philo, 4);
+		exit (1);
+	}
+	if (philo->index % 2 == 0)
+		smart_sleep(philo, philo->to_eat / 2);
+	while (1)
+	{
+		ph_routine(philo);
+		if (check_eaten(philo))
+			break ;
+		sem_wait(philo->die_s);
+		if (philo->is_to_die)
+		{
+			sem_post(philo->die_s);
+			break;
+		}
+		sem_post(philo->die_s);
+	}
+	pthread_join(t, NULL);
+	exit (0);
+}
+
+static void	*to_stop(void *data)
 {
 	t_philo	*philo;
 
@@ -51,7 +85,7 @@ void	*to_stop(void *data)
 		exit (0);
 }
 
-void	ph_routine(t_philo *philo)
+static void	ph_routine(t_philo *philo)
 {
 	sem_wait(philo->fork);
 	print_action(philo, "has taken a 1_fork");
@@ -72,39 +106,15 @@ void	ph_routine(t_philo *philo)
 	print_action(philo, "is thinking");
 }
 
-int	philosopher(t_philo *philo)
+static int	check_eaten(t_philo *philo)
 {
-	pthread_t	t;
-	
-	if (add_sem(philo))
-		exit (1);
-	if (pthread_create(&t, NULL, to_stop, philo))
+	sem_wait(philo->is_eaten_s);
+	if (philo->is_eaten)
 	{
-		remove_sem(philo, 4);
-		exit (1);
-	}
-	if (philo->index % 2 == 0)
-		smart_sleep(philo, philo->to_eat / 2);
-
-	while (1)
-	{
-		ph_routine(philo);
-
-		sem_wait(philo->is_eaten_s);
-		if (philo->is_eaten)
-		{
-			sem_post(philo->is_eaten_s);
-			break ;
-		}
 		sem_post(philo->is_eaten_s);
-		sem_wait(philo->die_s);
-		if (philo->is_to_die)
-		{
-			sem_post(philo->die_s);
-			break;
-		}
-		sem_post(philo->die_s);
+		return (1);
 	}
-	pthread_join(t, NULL);
-	exit (0);
+	sem_post(philo->is_eaten_s);
+
+	return (0);
 }
