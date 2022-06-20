@@ -20,6 +20,7 @@ static void	ph_routine(t_philo *philo);
 static void	*to_stop(void *data);
 static int	check_eaten(t_philo *philo);
 static int	check_died(t_philo *philo);
+static int	change_eaten(t_philo *philo);
 
 int	philosopher(t_philo *philo)
 {
@@ -53,15 +54,8 @@ static void	*to_stop(void *data)
 	philo = data;
 	while (1)
 	{
-		sem_wait(philo->nm_s);
-		if (philo->times_to_eat != -1 && philo->nb_meal == philo->times_to_eat)
-		{
-			sem_wait(philo->is_eaten_s);
-			philo->is_eaten = 1;
-			sem_post(philo->is_eaten_s);
-			break ;
-		}
-		sem_post(philo->nm_s);
+		if (change_eaten(philo))
+			break;
 		sem_wait(philo->last_s);
 		if (timestamp() - philo->last_meal >= philo->to_die)
 		{
@@ -124,5 +118,19 @@ static int	check_died(t_philo *philo)
 		return (1);
 	}
 	sem_post(philo->die_s);
+	return (0);
+}
+
+static int	change_eaten(t_philo *philo)
+{
+	sem_wait(philo->nm_s);
+	if (philo->times_to_eat != -1 && philo->nb_meal == philo->times_to_eat)
+	{
+		sem_wait(philo->is_eaten_s);
+		philo->is_eaten = 1;
+		sem_post(philo->is_eaten_s);
+		return (1);
+	}
+	sem_post(philo->nm_s);
 	return (0);
 }
