@@ -19,6 +19,7 @@
 static void	ph_routine(t_philo *philo);
 static void	*to_stop(void *data);
 static int	check_eaten(t_philo *philo);
+static int	check_died(t_philo *philo);
 
 int	philosopher(t_philo *philo)
 {
@@ -38,13 +39,8 @@ int	philosopher(t_philo *philo)
 		ph_routine(philo);
 		if (check_eaten(philo))
 			break ;
-		sem_wait(philo->die_s);
-		if (philo->is_to_die)
-		{
-			sem_post(philo->die_s);
+		if (check_died(philo))
 			break;
-		}
-		sem_post(philo->die_s);
 	}
 	pthread_join(t, NULL);
 	exit (0);
@@ -116,5 +112,17 @@ static int	check_eaten(t_philo *philo)
 	}
 	sem_post(philo->is_eaten_s);
 
+	return (0);
+}
+
+static int	check_died(t_philo *philo)
+{
+	sem_wait(philo->die_s);
+	if (philo->is_to_die)
+	{
+		sem_post(philo->die_s);
+		return (1);
+	}
+	sem_post(philo->die_s);
 	return (0);
 }
