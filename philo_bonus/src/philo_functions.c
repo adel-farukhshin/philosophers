@@ -185,12 +185,12 @@ int	philosopher(t_philo *philo)
 	pthread_t	t;
 	
 	if (add_sem(philo))
-		return (1);
+		exit (1);
 
 	if (pthread_create(&t, NULL, to_stop, philo))
 	{
 		remove_sem(philo, 4);
-		return (1);
+		exit (1);
 	}
 
 	if (philo->index % 2 == 0)
@@ -230,7 +230,7 @@ int	philosopher(t_philo *philo)
 	// 	printf("b\n");
 	// 	return (0);
 	// }
-	return (0);
+	exit (0);
 }
 
 int	add_sem(t_philo *philo)
