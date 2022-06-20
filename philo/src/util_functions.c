@@ -41,6 +41,8 @@ long long	timedif(long long past, long long pres)
 void	print_action(t_philo *philo, char *msg)
 {
 	// lock the writing mutex
+	if (!philo->data->out_m)
+		return ;
 	pthread_mutex_lock(philo->data->out_m);
 	if (!(philo->data->is_to_die))
 	{
