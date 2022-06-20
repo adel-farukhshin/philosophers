@@ -81,6 +81,7 @@ int			ft_atoi(const char *str);
 
 int			launch(t_philos *philos);
 int			philosopher(t_philo *philo);
+void		smart_sleep(t_philo *philo, long long time);
 long long	timestamp(void);
 long long	timedif(long long last, long long next);
 void		print_action(t_philo *philo, char *msg);

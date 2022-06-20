@@ -40,29 +40,7 @@ pthread_mutex_t	*max(pthread_mutex_t *r, pthread_mutex_t *l)
 		return (l);
 }
 */
-void	smart_sleep(t_philo *philo, long long time)
-{
-	long long	i;
-	long long	a;
 
-	i = timestamp();
-	while (1)
-	// while (!(philo->is_to_die))
-	{
-		a = timestamp();
-		sem_wait(philo->die_s);
-		sem_wait(philo->is_eaten_s);
-		if (a - i >= time || philo->is_to_die || (philo->times_to_eat != -1 && philo->is_eaten))
-		{
-			sem_post(philo->is_eaten_s);
-			sem_post(philo->die_s);
-			break ;
-		}
-		sem_post(philo->die_s);
-		sem_post(philo->is_eaten_s);
-		usleep(500);
-	}
-}
 /*
 void	ph_eat(t_philo *philo)
 {
