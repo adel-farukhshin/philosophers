@@ -18,7 +18,9 @@
 static int	thread_create(t_philos *philos, pthread_t *t);
 static int	thread_delete(pthread_t *t, int nb);
 static int	to_stop(t_philos *philos);
+static int	is_to_die(t_philo *philo);
 static int	is_all_ate(t_philos *philos);
+
 
 int	launch(t_philos *philos)
 {	
@@ -82,6 +84,10 @@ static int	to_stop(t_philos *philos)
 	i = 0;
 	while (i < philos->ph_num)
 	{
+		if (is_to_die(philos->ph_arr + i))
+			return (1);
+
+		/*
 		pthread_mutex_lock(((philos->ph_arr) + i)->last_m);
 		if (timedif(philos->ph_arr[i].last_meal
 				, timestamp()) >= philos->data.to_die)
@@ -92,10 +98,26 @@ static int	to_stop(t_philos *philos)
 			return (1);
 		}
 		pthread_mutex_unlock(((philos->ph_arr) + i)->last_m);
+		*/
 		if (is_all_ate(philos))
 			return (2);
 		i++;
 	}
+	return (0);
+}
+
+static int	is_to_die(t_philo *philo)
+{
+	pthread_mutex_lock(philo->last_m);
+	if (timedif(philo->last_meal
+			, timestamp()) >= philo->data->to_die)
+	{
+		pthread_mutex_unlock(philo->last_m);
+		print_action(philo, "died");
+		philo->data->is_to_die = 1;
+		return (1);
+	}
+	pthread_mutex_unlock(philo->last_m);
 	return (0);
 }
 
