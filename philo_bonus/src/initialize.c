@@ -14,30 +14,6 @@
 #include <stdlib.h>
 #include <fcntl.h>
 
-// int	init_philos(t_philos *philos)
-// {
-// 	int	i;
-
-// 	i = 1;
-// 	philos->ph_arr = malloc(sizeof(t_philo) * philos->ph_num);
-// 	if (!philos->ph_arr)
-// 		return (1);
-// 	while (i <= philos->ph_num)
-// 	{
-// 		philos->ph_arr[i - 1].index = i;
-// 		philos->ph_arr[i - 1].last_m = philos->last_mutexes + i - 1;
-// 		philos->ph_arr[i - 1].fork_l = philos->forks + i - 1;
-// 		if (i == 1)
-// 			philos->ph_arr[i - 1].fork_r = philos->forks + philos->ph_num - 1;
-// 		else
-// 			philos->ph_arr[i - 1].fork_r = philos->forks + i - 2;
-// 		philos->ph_arr[i - 1].nb_meal = 0;
-// 		philos->ph_arr[i - 1].data = &(philos->data);
-// 		i++;
-// 	}
-// 	return (0);
-// }
-
 int	initialize(t_philos *philos, int ac, char **av)
 {
 	philos->ph_num = ft_atoi(av[1]);
@@ -51,28 +27,13 @@ int	initialize(t_philos *philos, int ac, char **av)
 	philos->philo.nb_meal = 0;
 	philos->philo.is_eaten = 0;
 	philos->philo.is_to_die = 0;
-	
-	
-	sem_unlink("out");
-	sem_unlink("fork");
-	philos->philo.out = sem_open("out", O_CREAT, 0644, 1);
-	if (philos->philo.out == SEM_FAILED)
+	if (create_sem("out", &(philos->philo.out), 1))
 		return (1);
-	philos->philo.fork = sem_open("fork", O_CREAT, 0644, philos->ph_num);
-	if (philos->philo.fork == SEM_FAILED)
+	if (create_sem("fork", &(philos->philo.fork), philos->ph_num))
 	{
 		sem_delete(&(philos->philo), 1);	
 		return (1);
 	}
-
-
-	// if (all_mutex_init(philos))
-	// 	return (1);
-	// if (init_philos(philos))
-	// {
-	// 	all_mutex_delete(philos, 3);
-	// 	return (4);
-	// }
 	return (0);
 }
 
