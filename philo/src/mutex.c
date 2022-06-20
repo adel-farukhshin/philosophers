@@ -12,6 +12,7 @@
 
 #include "philosophers.h"
 #include <stdlib.h>
+#include <unistd.h>
 
 void	mutex_delete(pthread_mutex_t *mutex, int nb)
 {
@@ -46,6 +47,7 @@ int	mutex_init(pthread_mutex_t **type, int nb)
 
 void	all_mutex_delete(t_philos *philos, int mode)
 {
+	usleep(100);
 	if (mode > 0)
 		mutex_delete(philos->forks, philos->ph_num - 1);
 	if (mode > 1)
