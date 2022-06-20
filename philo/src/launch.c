@@ -16,7 +16,7 @@
 #include <unistd.h>
 
 static int	thread_create(t_philos *philos, pthread_t *t);
-static int	thread_delete(pthread_t *t, int nb);
+// static int	thread_delete(pthread_t *t, int nb);
 static int	to_stop(t_philos *philos);
 static int	is_to_die(t_philo *philo);
 static int	is_all_ate(t_philos *philos);
@@ -25,7 +25,7 @@ static int	is_all_ate(t_philos *philos);
 int	launch(t_philos *philos)
 {	
 	pthread_t	*t;
-	int			error;
+	// int			error;
 
 	t = malloc(sizeof(pthread_t) * philos->ph_num);
 	if (!t)
@@ -39,9 +39,10 @@ int	launch(t_philos *philos)
 	while (1)
 		if (to_stop(philos))
 			break ;
-	error = thread_delete(t, philos->ph_num - 1);
+	// error = thread_delete(t, philos->ph_num - 1);
 	free(t);
-	return (error);
+	// return (error);
+	return (0);
 }
 
 static int	thread_create(t_philos *philos, pthread_t *t)
@@ -51,31 +52,33 @@ static int	thread_create(t_philos *philos, pthread_t *t)
 	i = 0;
 	while (i < philos->ph_num)
 	{
+		(philos->ph_arr + i)->last_meal = timestamp();
 		if (pthread_create((t + i)
 				, NULL, philosopher, (philos->ph_arr + i)))
 		{
-			if (thread_delete(t, i - 1))
 				return (1);
+			// if (thread_delete(t, i - 1))
 		}
-		(philos->ph_arr + i)->last_meal = timestamp();
+		pthread_detach(*(t + i));
+		usleep(100);
 		i++;
 	}
 	return (0);
 }
 
-static int	thread_delete(pthread_t *t, int nb)
-{
-	int	error;
+// static int	thread_delete(pthread_t *t, int nb)
+// {
+// 	int	error;
 
-	error = 0;
-	while (nb > -1)
-	{
-		if (pthread_join(t[nb], NULL))
-			error = 2;
-		nb--;
-	}
-	return (error);
-}
+// 	error = 0;
+// 	while (nb > -1)
+// 	{
+// 		if (pthread_detach(t[nb]))
+// 			error = 2;
+// 		nb--;
+// 	}
+// 	return (error);
+// }
 
 static int	to_stop(t_philos *philos)
 {
@@ -115,6 +118,7 @@ static int	is_to_die(t_philo *philo)
 		pthread_mutex_unlock(philo->last_m);
 		print_action(philo, "died");
 		philo->data->is_to_die = 1;
+		pthread_mutex_lock(philo->data->out_m);
 		return (1);
 	}
 	pthread_mutex_unlock(philo->last_m);
