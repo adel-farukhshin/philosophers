@@ -15,28 +15,67 @@
 #include <stdio.h>
 #include <unistd.h>
 
-int	is_all_ate(t_philos *philos)
+static int	thread_create(t_philos *philos, pthread_t *t);
+static int	thread_delete(pthread_t *t, int nb);
+static int	is_died(t_philos *philos);
+static int	is_all_ate(t_philos *philos);
+
+int	launch(t_philos *philos)
+{	
+	pthread_t	*t;
+	int			error;
+
+	t = malloc(sizeof(pthread_t) * philos->ph_num);
+	if (!t)
+		return (1);
+	philos->data.start = timestamp();
+	if (thread_create(philos, t))
+	{
+		free (t);
+		return (2);
+	}
+	while (1)
+		if (is_died(philos))
+			break ;
+	error = thread_delete(t, philos->ph_num - 1);
+	free(t);
+	return (error);
+}
+
+static int	thread_create(t_philos *philos, pthread_t *t)
 {
 	int	i;
-	int	nb;
 
 	i = 0;
-	nb = 0;
-	while (philos->times_to_eat != -1 && i < philos->ph_num)
+	while (i < philos->ph_num)
 	{
-		if (((philos->ph_arr) + i)->nb_meal >= philos->times_to_eat)
-			nb++;
+		if (pthread_create((t + i)
+				, NULL, philosopher, (philos->ph_arr + i)))
+		{
+			if (thread_delete(t, i - 1))
+				return (1);
+		}
+		(philos->ph_arr + i)->last_meal = timestamp();
 		i++;
-	}
-	if (nb == philos->ph_num)
-	{
-		philos->data.is_all_ate = 1;
-		return (1);
 	}
 	return (0);
 }
 
-int	is_died(t_philos *philos)
+static int	thread_delete(pthread_t *t, int nb)
+{
+	int	error;
+
+	error = 0;
+	while (nb > -1)
+	{
+		if (pthread_join(t[nb], NULL))
+			error = 2;
+		nb--;
+	}
+	return (error);
+}
+
+static int	is_died(t_philos *philos)
 {
 	int	i;
 
@@ -61,57 +100,23 @@ int	is_died(t_philos *philos)
 	return (0);
 }
 
-int	thread_delete(pthread_t *t, int nb)
-{
-	int	error;
-
-	error = 0;
-	while (nb > -1)
-	{
-		if (pthread_join(t[nb], NULL))
-			error = 2;
-		nb--;
-	}
-	return (error);
-}
-
-int	thread_create(t_philos *philos, pthread_t	*t)
+static int	is_all_ate(t_philos *philos)
 {
 	int	i;
+	int	nb;
 
 	i = 0;
-	while (i < philos->ph_num)
+	nb = 0;
+	while (philos->times_to_eat != -1 && i < philos->ph_num)
 	{
-		if (pthread_create((t + i)
-				, NULL, philosopher, (philos->ph_arr + i)))
-		{
-			if (thread_delete(t, i - 1))
-				return (1);
-		}
-		(philos->ph_arr + i)->last_meal = timestamp();
+		if (((philos->ph_arr) + i)->nb_meal >= philos->times_to_eat)
+			nb++;
 		i++;
 	}
-	return (0);
-}
-
-int	launch(t_philos *philos)
-{	
-	pthread_t	*t;
-	int			error;
-
-	t = malloc(sizeof(pthread_t) * philos->ph_num);
-	if (!t)
-		return (1);
-	philos->data.start = timestamp();
-	if (thread_create(philos, t))
+	if (nb == philos->ph_num)
 	{
-		free (t);
-		return (2);
+		philos->data.is_all_ate = 1;
+		return (1);
 	}
-	while (1)
-		if (is_died(philos))
-			break ;
-	error = thread_delete(t, philos->ph_num - 1);
-	free(t);
-	return (error);
+	return (0);
 }
