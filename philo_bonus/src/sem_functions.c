@@ -18,3 +18,17 @@ void	delete_sem(char *name, sem_t **sem)
 	sem_close(*sem);
 	sem_unlink(name);
 }
+
+void	sem_delete(t_philo *philo, int mode)
+{
+	if (mode > 0)
+	{
+		sem_close(philo->out);
+		sem_unlink("out");
+	}
+	if (mode > 1)
+	{
+		sem_close(philo->fork);
+		sem_unlink("fork");
+	}
+}
