@@ -17,6 +17,7 @@
 #include <fcntl.h>
 
 static int	change_eaten(t_philo *philo);
+static int	change_died(t_philo *philo);
 
 void	*to_stop(void *data)
 {
@@ -27,17 +28,8 @@ void	*to_stop(void *data)
 	{
 		if (change_eaten(philo))
 			break;
-		sem_wait(philo->last_s);
-		if (timestamp() - philo->last_meal >= philo->to_die)
-		{
-			sem_wait(philo->die_s);
-			philo->is_to_die = 1;
-			sem_post(philo->die_s);
-			sem_wait(philo->out);
-			printf("%llu %d is_died\n", timestamp() - philo->start, philo->index);
-			break ;
-		}
-		sem_post(philo->last_s);
+		if (change_died(philo))
+			break;
 	}
 	remove_sem(philo, 4);
 	if (philo->is_to_die)
@@ -57,6 +49,23 @@ static int	change_eaten(t_philo *philo)
 		return (1);
 	}
 	sem_post(philo->nm_s);
+	return (0);
+}
+
+static int	change_died(t_philo *philo)
+{
+	sem_wait(philo->last_s);
+	if (timestamp() - philo->last_meal >= philo->to_die)
+	{
+		sem_wait(philo->die_s);
+		philo->is_to_die = 1;
+		sem_post(philo->die_s);
+		sem_wait(philo->out);
+		printf("%llu %d is_died\n", timestamp() - philo->start, philo->index);
+		return (1);
+	}
+	sem_post(philo->last_s);
+
 	return (0);
 }
 
