@@ -17,7 +17,7 @@
 
 static int	thread_create(t_philos *philos, pthread_t *t);
 static int	thread_delete(pthread_t *t, int nb);
-static int	is_died(t_philos *philos);
+static int	to_stop(t_philos *philos);
 static int	is_all_ate(t_philos *philos);
 
 int	launch(t_philos *philos)
@@ -35,7 +35,7 @@ int	launch(t_philos *philos)
 		return (2);
 	}
 	while (1)
-		if (is_died(philos))
+		if (to_stop(philos))
 			break ;
 	error = thread_delete(t, philos->ph_num - 1);
 	free(t);
@@ -75,7 +75,7 @@ static int	thread_delete(pthread_t *t, int nb)
 	return (error);
 }
 
-static int	is_died(t_philos *philos)
+static int	to_stop(t_philos *philos)
 {
 	int	i;
 
