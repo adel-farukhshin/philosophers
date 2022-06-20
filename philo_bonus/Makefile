@@ -2,7 +2,7 @@
 NAME = philo_bonus
 
 SRC =	main.c philosopher.c philo_functions.c util_functions.c \
-		initialize.c mutex.c launch.c file.c sem_functions.c
+		initialize.c launch.c file.c sem_functions.c
 
 OBJ = $(addprefix $(OBJDIR),$(SRC:.c=.o))
 
