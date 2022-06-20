@@ -46,6 +46,5 @@ int	main(int argc, char **argv)
 		return (2);
 	if (launch(&philos))
 		return (3);
-	
 	sem_delete(&(philos.philo), 2);
 }

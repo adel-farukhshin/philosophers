@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philosopher.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: bsarai <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/06/20 15:18:03 by bsarai            #+#    #+#             */
+/*   Updated: 2022/06/20 15:18:04 by bsarai           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philosophers.h"
 #include <stdio.h>
 #include <unistd.h>
@@ -10,7 +22,7 @@ static int	check_died(t_philo *philo);
 int	philosopher(t_philo *philo)
 {
 	pthread_t	t;
-	
+
 	if (add_sem(philo))
 		exit (1);
 	if (pthread_create(&t, NULL, to_stop, philo))
@@ -26,7 +38,7 @@ int	philosopher(t_philo *philo)
 		if (check_eaten(philo))
 			break ;
 		if (check_died(philo))
-			break;
+			break ;
 	}
 	pthread_join(t, NULL);
 	exit (0);
@@ -41,7 +53,6 @@ static int	check_eaten(t_philo *philo)
 		return (1);
 	}
 	sem_post(philo->is_eaten_s);
-
 	return (0);
 }
 
@@ -56,4 +67,3 @@ static int	check_died(t_philo *philo)
 	sem_post(philo->die_s);
 	return (0);
 }
-

@@ -27,9 +27,9 @@ void	*to_stop(void *data)
 	while (1)
 	{
 		if (change_eaten(philo))
-			break;
+			break ;
 		if (change_died(philo))
-			break;
+			break ;
 	}
 	remove_sem(philo, 4);
 	if (philo->is_to_die)
@@ -65,7 +65,6 @@ static int	change_died(t_philo *philo)
 		return (1);
 	}
 	sem_post(philo->last_s);
-
 	return (0);
 }
 

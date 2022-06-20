@@ -17,17 +17,6 @@
 # include <pthread.h>
 # include <semaphore.h>
 
-// typedef struct s_data {
-// 	long long				start;
-// 	int						to_die;
-// 	int						to_eat;
-// 	int						to_sleep;
-// 	pthread_mutex_t			*out_m;
-// 	int						ph_num;
-// 	int						is_all_ate;
-//	int						is_to_die;
-// }	t_data;
-
 typedef struct s_philo {
 	int						index;
 
@@ -39,7 +28,7 @@ typedef struct s_philo {
 
 	int						nb_meal;
 	long long				last_meal;
-	
+
 	int						is_eaten;
 	int						is_to_die;
 
@@ -49,23 +38,12 @@ typedef struct s_philo {
 	sem_t					*die_s;
 	sem_t					*nm_s;
 	sem_t					*is_eaten_s;
-
-	// pthread_mutex_t			*fork_r;
-	// pthread_mutex_t			*fork_l;
-	// pthread_mutex_t			*last_m;
 }	t_philo;
 
 typedef struct s_philos {
-	// t_philo			*ph_arr;
 	int				ph_num;
 	t_philo			philo;
-	// int				times_to_eat;
-	// t_data			data;
-	// pthread_mutex_t	*forks;
-	// pthread_mutex_t	*last_mutexes;
 }	t_philos;
-
-
 
 int			initialize(t_philos *philos, int ac, char **av);
 void		sem_delete(t_philo *philo, int mode);
@@ -74,11 +52,6 @@ int			create_sem(char *name, sem_t **sem, int value);
 void		delete_sem(char *name, sem_t **sem);
 int			add_sem(t_philo *philo);
 void		remove_sem(t_philo *philo, int mode);
-
-int			all_mutex_init(t_philos *philos);
-void		all_mutex_delete(t_philos *philos, int mode);
-
-int			ft_atoi(const char *str);
 
 int			launch(t_philos *philos);
 int			philosopher(t_philo *philo);
@@ -92,4 +65,5 @@ void		print_action(t_philo *philo, char *msg);
 
 void		name_file(char *src, char dst[], int index);
 
+int			ft_atoi(const char *str);
 #endif

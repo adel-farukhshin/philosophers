@@ -31,13 +31,11 @@ int	initialize(t_philos *philos, int ac, char **av)
 		return (1);
 	if (create_sem("fork", &(philos->philo.fork), philos->ph_num))
 	{
-		sem_delete(&(philos->philo), 1);	
+		sem_delete(&(philos->philo), 1);
 		return (1);
 	}
 	return (0);
 }
-
-
 
 // #include <stdio.h>
 //

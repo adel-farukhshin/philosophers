@@ -1,4 +1,14 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   util_functions.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: bsarai <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/06/20 15:18:20 by bsarai            #+#    #+#             */
+/*   Updated: 2022/06/20 15:18:21 by bsarai           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "philosophers.h"
 #include <stdio.h>
@@ -27,7 +37,7 @@ int	ft_atoi(const char *str)
 
 long long	timestamp(void)
 {
-	struct timeval tv;
+	struct timeval	tv;
 
 	gettimeofday(&tv, NULL);
 	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
@@ -52,12 +62,12 @@ void	smart_sleep(t_philo *philo, long long time)
 
 	i = timestamp();
 	while (1)
-	// while (!(philo->is_to_die))
 	{
 		a = timestamp();
 		sem_wait(philo->die_s);
 		sem_wait(philo->is_eaten_s);
-		if (a - i >= time || philo->is_to_die || (philo->times_to_eat != -1 && philo->is_eaten))
+		if (a - i >= time || philo->is_to_die
+			|| (philo->times_to_eat != -1 && philo->is_eaten))
 		{
 			sem_post(philo->is_eaten_s);
 			sem_post(philo->die_s);
