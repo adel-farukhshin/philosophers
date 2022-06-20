@@ -117,7 +117,7 @@ static int	is_to_die(t_philo *philo)
 	{
 		pthread_mutex_unlock(philo->last_m);
 		print_action(philo, "died");
-		philo->data->is_to_die = 1;
+		philo->is_to_die = 1;
 		pthread_mutex_lock(philo->data->out_m);
 		return (1);
 	}

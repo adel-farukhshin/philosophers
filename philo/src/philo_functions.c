@@ -71,7 +71,7 @@ void	*philosopher(void *data)
 	// 	smart_sleep(philo->data->to_die, philo);
 	// 	philo->data->is_to_die = 1;
 	// }
-	while (!(philo->data->is_to_die) && !(philo->data->is_all_ate))
+	while (!(philo->is_to_die) && !(philo->data->is_all_ate))
 	{
 		pthread_mutex_lock(min(philo->fork_r, philo->fork_l));
 		print_action(philo, "has taken a fork");

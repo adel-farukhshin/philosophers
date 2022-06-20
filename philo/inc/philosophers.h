@@ -31,6 +31,7 @@ typedef struct s_philo {
 	long long				last_meal;
 	int						nb_meal;
 	int						index;
+	int						is_to_die;
 	pthread_mutex_t			*fork_r;
 	pthread_mutex_t			*fork_l;
 	pthread_mutex_t			*last_m;

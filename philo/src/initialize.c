@@ -31,6 +31,7 @@ int	init_philos(t_philos *philos)
 		else
 			philos->ph_arr[i - 1].fork_r = philos->forks + i - 2;
 		philos->ph_arr[i - 1].nb_meal = 0;
+		philos->ph_arr[i - 1].is_to_die = 0;
 		philos->ph_arr[i - 1].data = &(philos->data);
 		i++;
 	}
