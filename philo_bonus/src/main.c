@@ -12,7 +12,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "philosophers.h"
+#include "philosophers_bonus.h"
 
 int	check_args(int argc, char **argv)
 {

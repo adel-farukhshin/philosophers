@@ -13,7 +13,7 @@ SRCDIR = ./src/
 OBJDIR = ./obj/
 INCDIR = ./inc/
 
-HEADER = philosophers.h 
+HEADER = philosophers_bonus.h 
 
 CC = cc
 
