@@ -80,8 +80,7 @@ static int	to_stop(t_philos *philos)
 	int	i;
 
 	i = 0;
-	while (i < philos->ph_num
-		&& !(philos->data.is_to_die) && !(philos->data.is_all_ate))
+	while (i < philos->ph_num)
 	{
 		pthread_mutex_lock(((philos->ph_arr) + i)->last_m);
 		if (timedif(philos->ph_arr[i].last_meal
